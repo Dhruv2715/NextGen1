@@ -1,0 +1,15 @@
+Pushing bc91f3f... 
+To https://github.com/Dhruv2715/NextGen.git
+ * [new branch]      bc91f3f -> main
+Done bc91f3f. 
+Pushing c157000... 
+error: RPC failed; HTTP 408 curl 22 The requested URL returned error: 408
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+Everything up-to-date
+Done c157000. 
+Pushing main... 
+error: RPC failed; HTTP 408 curl 22 The requested URL returned error: 408
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+Everything up-to-date

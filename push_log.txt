@@ -1,0 +1,35 @@
+Pushing bc91f3f... 
+error: The destination you provided is not a full refname (i.e.,
+starting with "refs/"). We tried to guess what you meant by:
+
+- Looking for a ref that matches 'main' on the remote side.
+- Checking if the <src> being pushed ('bc91f3f')
+  is a ref in "refs/{heads,tags}/". If so we add a corresponding
+  refs/{heads,tags}/ prefix on the remote side.
+
+Neither worked, so we gave up. You must fully qualify the ref.
+hint: The <src> part of the refspec is a commit object.
+hint: Did you mean to create a new branch by pushing to
+hint: 'bc91f3f:refs/heads/main'?
+error: failed to push some refs to 'https://github.com/Dhruv2715/NextGen.git'
+Done bc91f3f. 
+Pushing c157000... 
+error: The destination you provided is not a full refname (i.e.,
+starting with "refs/"). We tried to guess what you meant by:
+
+- Looking for a ref that matches 'main' on the remote side.
+- Checking if the <src> being pushed ('c157000')
+  is a ref in "refs/{heads,tags}/". If so we add a corresponding
+  refs/{heads,tags}/ prefix on the remote side.
+
+Neither worked, so we gave up. You must fully qualify the ref.
+hint: The <src> part of the refspec is a commit object.
+hint: Did you mean to create a new branch by pushing to
+hint: 'c157000:refs/heads/main'?
+error: failed to push some refs to 'https://github.com/Dhruv2715/NextGen.git'
+Done c157000. 
+Pushing main... 
+error: RPC failed; HTTP 408 curl 22 The requested URL returned error: 408
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+Everything up-to-date
