@@ -1,217 +1,58 @@
+# NextGen - AI Technical Assessment Portal
 
-<div align="center">
-  <img src="Assets/Intro.gif" alt="MockMate Demo" width="100%" />
-  
-  <h1>NextGen</h1>
-  
-  <p><strong>Technical Proficiency & Interview Evaluation Platform</strong></p>
+NextGen is a sophisticated, dual-portal technical assessment platform designed to streamline the hiring process for both interviewers and candidates. Built with a modern tech stack, it provides data-driven insights, real-time assessment tracking, and a premium user experience.
 
-  <p>
-    <a href="#features">Features</a> •
-    <a href="#tech-stack">Tech Stack</a> •
-    <a href="#system-architecture">Architecture</a> •
-    <a href="#getting-started">Getting Started</a>
-  </p>
+## 🚀 Key Features
 
-  ![GitHub stars](https://img.shields.io/github/stars/yourusername/NextGen?style=social)
-  ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-  ![Status](https://img.shields.io/badge/status-active-success.svg)
-</div>
+### For Interviewers
+- **Dedicated Job Management**: A centralized hub to create, edit, and track job listings and participant counts.
+- **Advanced Analytics**: Visual insights into hiring funnels, skill demand trends, and placement rates.
+- **Real-time Status Control**: Easily toggle job postings between Active and Inactive states.
+- **Search & Filtering**: Powerful tools to manage large pipelines of applications.
 
----
+### For Candidates
+- **Discovery Dashboard**: A streamlined interface to find relevant job opportunities with real-time search.
+- **Application Tracking**: A dedicated workspace to monitor the status of ongoing and completed assessments.
+- **Resume Builder**: A personalized profile management tool to highlight technical expertise.
+- **Practice Arena**: Integrated tools to sharpen coding skills before live assessments.
 
-## 🚀 Overview
+## 🛠️ Tech Stack
 
-**NextGen** is a scalable, cloud-native technical assessment platform with dual portals for candidates and interviewers. Built with React, Node.js, PostgreSQL, and AI-powered evaluation.
+- **Frontend**: React.js, Tailwind CSS (for custom visuals), Lucide Icons, React Router.
+- **Backend**: Node.js, Express.js.
+- **Database**: MongoDB (Mongoose).
+- **Authentication**: JWT-based secure role-based access control.
 
-**Key Features:**
-- **Candidate Portal**: Browse jobs, take live technical interviews with webcam and code editor
-- **Interviewer Portal**: Create job postings, review candidate interviews with AI-powered analysis
-- Real-time speech-to-text transcription
-- Live coding with Monaco Editor
-- AI-generated interview questions (Google Gemini)
-- Automated scoring and feedback
-
-## ✨ Features
-
-| Feature | Description | Preview |
-|:---:|---|:---:|
-| **Live AI Interview** | Real-time video interview simulation with AI-generated questions and immediate feedback. Uses media cleanup to ensure privacy. | <img src="Assets/LiveInterview.png" width="300" /> |
-| **Interactive Dashboard** | Track your progress, view past session scores, and manage your interview schedule. | <img src="Assets/Dashboard.png" width="300" /> |
-| **Resume Analysis** | Upload your resume to get custom-tailored questions that match your experience level. | <img src="Assets/Resume.png" width="300" /> |
-| **Concept Drill** | Deep dive into specific topics with AI-driven explanations and code examples. | <img src="Assets/InterviewPrep.png" width="300" /> |
-
-<div align="center">
-  <img src="Assets/LandingPage.png" width="45%" alt="Landing Page"/>
-  <img src="Assets/LiveInterviewCodeGenerate.png" width="45%" alt="Code Generation"/>
-</div>
-
-## 🛠 Tech Stack
-
-### Frontend
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-![WebRTC](https://img.shields.io/badge/WebRTC-333333?style=for-the-badge&logo=webrtc&logoColor=white)
-
-### Backend
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-
-### AI & APIs
-![Gemini API](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
-
-## 🏗 System Architecture
-
-The application follows a modern microservices-inspired monolithic architecture with real-time capabilities.
-
-```mermaid
-graph TB
-    subgraph Client
-        UI[React UI]
-        Stream[MediaStream API]
-        RTC_C[WebRTC Client]
-    end
-
-    subgraph Server
-        API[Express REST API]
-        Socket[Socket.io Server]
-        Auth[Auth Middleware]
-    end
-
-    subgraph Services
-        DB[(MongoDB Atlas)]
-        AI[Gemini AI]
-        Cloud[Cloudinary]
-    end
-
-    UI -->|HTTP| API
-    UI -->|WS| Socket
-    Stream --> RTC_C
-    RTC_C <-->|P2P Video| RTC_C
-    
-    API -->|Auth| Auth
-    API -->|Data| DB
-    API -->|Generate| AI
-    API -->|Store Media| Cloud
-    
-    Socket -->|Signaling| API
-```
-
-## 🔄 User Flow
-
-```mermaid
-journey
-    title User Interview Journey
-    section Onboarding
-      Sign Up/Login: 5: User
-      Complete Profile: 4: User
-    section Preparation
-      Upload Resume: 5: User
-      Select Role & Skills: 5: User
-    section Interview
-      Enter Lobby: 4: User
-      Connect Audio/Video: 3: User, System
-      Answer AI Questions: 5: User, AI
-      Receive Real-time Feedback: 5: AI
-    section Review
-      View Analysis Score: 5: User
-      Check Transcript: 4: User
-      Download Report: 5: User
-```
-
-## ⚡ Getting Started
+## 📦 Getting Started
 
 ### Prerequisites
-- **Node.js**: v18.0.0 or higher
-- **npm**: v8.0.0 or higher
-- **MongoDB**: Local URI or Atlas Connection String
+- Node.js (v16+)
+- MongoDB connection string
 
-### 📥 Installation
-
-1. **Clone the repository**
+### Installation
+1. Clone the repository:
    ```bash
-   git clone https://github.com/akhilthirunalveli/MockMate.git
-   cd MockMate
+   git clone https://github.com/Dhruv2715/NextGen1.git
+   ```
+2. Install dependencies for both folders:
+   ```bash
+   cd backend && npm install
+   cd ../frontend && npm install
+   ```
+3. Set up your `.env` in the `backend` folder:
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_uri
+   GEMINI_API_KEY=your_gen_ai_key
+   ```
+4. Run the development environment:
+   ```bash
+   # From root
+   npm start
    ```
 
-2. **Install Backend Dependencies**
-   ```bash
-   cd backend
-   npm install
-   ```
-
-3. **Install Frontend Dependencies**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-### 🔑 Environment Variables
-
-You need to create a `.env` file in **both** the `frontend` and `backend` directories.
-
-#### Backend (`backend/.env`)
-
-| Variable | Description |
-|---|---|
-| `PORT` | Server port (e.g., 5000) |
-| `MONGO_URI` | MongoDB Connection String |
-| `JWT_SECRET` | Secret key for JWT signing |
-| `GEMINI_API_KEY` | Google Gemini AI API Key |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary Name |
-| `CLOUDINARY_API_KEY` | Cloudinary API Key |
-| `CLOUDINARY_API_SECRET` | Cloudinary API Secret |
-
-#### Frontend (`frontend/.env`)
-
-| Variable | Description |
-|---|---|
-| `VITE_BASE_URL` | Backend API URL (e.g., http://localhost:5000) |
-| `VITE_FIREBASE_API_KEY` | Firebase API Key |
-| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase Auth Domain |
-| `VITE_FIREBASE_PROJECT_ID` | Firebase Project ID |
-| `VITE_FIREBASE_APP_ID` | Firebase App ID |
-| `VITE_METERED_USERNAME` | Metered Turn Server Username (Optional) |
-| `VITE_METERED_CREDENTIAL` | Metered Turn Server Credential (Optional) |
-
-### 🚀 Running the App
-
- **Run both Servers Concurrently (Recommended if configured)**
-   ```bash
-   # From root if concurrently is set up, otherwise run separate terminals:
-   ```
-
-**Terminal 1 (Backend)**
-```bash
-cd backend
-npm run dev
-```
-
-**Terminal 2 (Frontend)**
-```bash
-cd frontend
-npm run dev
-```
-
-Visit `http://localhost:5173` to view the application.
-
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+## 🎨 Branding & Design
+NextGen features a premium "Glassmorphism" aesthetic with vibrant gradients and smooth micro-animations, ensuring a state-of-the-art feel for both recruiters and talent.
 
 ---
-
-<div align="center">
-  <p>Made with ❤️ by the Akhil </p>
-</div>
+*Developed with focus on visual excellence and scalability.*
