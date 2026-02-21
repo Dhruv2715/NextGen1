@@ -54,3 +54,35 @@ Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generative
     at async generateContent (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
     at async generateContentWithRetry (d:\NextGen1\backend\controllers\aiController.js:19:12)
     at async generateInterviewQuestion (d:\NextGen1\backend\controllers\aiController.js:589:20)
+[2026-01-31T06:15:45.548Z] API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:403:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async makeRequest (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:376:9)
+    at async generateContent (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
+    at async generateContentWithRetry (d:\NextGen1\backend\controllers\aiController.js:19:12)
+    at async generateInterviewQuestion (d:\NextGen1\backend\controllers\aiController.js:589:20)
+[2026-01-31T06:15:46.191Z] API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:403:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async makeRequest (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:376:9)
+    at async generateContent (d:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
+    at async generateContentWithRetry (d:\NextGen1\backend\controllers\aiController.js:19:12)
+    at async generateInterviewQuestion (d:\NextGen1\backend\controllers\aiController.js:589:20)
+[2026-02-06T17:42:29.210Z] API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:403:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async makeRequest (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:376:9)
+    at async generateContent (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
+    at async generateContentWithRetry (D:\NextGen1\backend\controllers\aiController.js:19:12)
+    at async generateInterviewQuestion (D:\NextGen1\backend\controllers\aiController.js:589:20)
+[2026-02-06T17:42:29.414Z] API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:403:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async makeRequest (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:376:9)
+    at async generateContent (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
+    at async generateContentWithRetry (D:\NextGen1\backend\controllers\aiController.js:19:12)
+    at async generateInterviewQuestion (D:\NextGen1\backend\controllers\aiController.js:589:20)

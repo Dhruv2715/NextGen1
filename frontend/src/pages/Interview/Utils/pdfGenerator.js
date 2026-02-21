@@ -70,12 +70,12 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
         // Add header for subsequent pages
         pdf.setFillColor(...colors.primary);
         pdf.rect(0, 0, pageWidth, 25, 'F');
-        
+
         pdf.setFontSize(16);
         pdf.setTextColor(...colors.accent);
         pdf.setFont('helvetica', 'bold');
-        pdf.text('MockMate', margin, 15);
-        
+        pdf.text('NextGen', margin, 15);
+
         pdf.setFontSize(8);
         pdf.setTextColor(200, 200, 200);
         pdf.setFont('helvetica', 'normal');
@@ -86,22 +86,22 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Helper function to add section header with better spacing
     const addSectionHeader = (title, color = colors.primary) => {
       checkPageBreak(35);
-      
+
       // Section background with more height
       pdf.setFillColor(245, 245, 245);
       pdf.roundedRect(margin, currentY, contentWidth, 15, 2, 2, 'F');
-      
+
       // Section border
       pdf.setDrawColor(...color);
       pdf.setLineWidth(0.5);
       pdf.line(margin, currentY + 15, margin + contentWidth, currentY + 15);
-      
+
       pdf.setFontSize(14);
       pdf.setTextColor(...color);
       pdf.setFont('helvetica', 'bold');
       pdf.text(title, margin + 5, currentY + 10);
       pdf.setFont('helvetica', 'normal');
-      
+
       currentY += 25; // More spacing after header
     };
 
@@ -109,16 +109,16 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     const addInfoCard = (content, bgColor = colors.cardBg, borderColor = [220, 220, 220]) => {
       const cardHeight = Array.isArray(content) ? content.length * 8 + 20 : 30;
       checkPageBreak(cardHeight + 15);
-      
+
       // Card background
       pdf.setFillColor(...bgColor);
       pdf.roundedRect(margin, currentY, contentWidth, cardHeight, 3, 3, 'F');
-      
+
       // Card border
       pdf.setDrawColor(...borderColor);
       pdf.setLineWidth(0.3);
       pdf.roundedRect(margin, currentY, contentWidth, cardHeight, 3, 3, 'D');
-      
+
       if (Array.isArray(content)) {
         content.forEach((item, index) => {
           pdf.setFontSize(10);
@@ -131,7 +131,7 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
           }
         });
       }
-      
+
       currentY += cardHeight + 15; // More spacing after card
       return currentY - 15;
     };
@@ -140,23 +140,23 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     const addProgressBar = (label, score, x, y, width = 120) => {
       const barHeight = 6;
       const fillWidth = (score / 10) * width;
-      
+
       // Label
       pdf.setFontSize(11);
       pdf.setTextColor(...colors.text);
       pdf.text(label, x, y);
-      
+
       // Background bar
       pdf.setFillColor(235, 235, 235);
       pdf.roundedRect(x, y + 3, width, barHeight, 2, 2, 'F');
-      
+
       // Progress fill
       const color = score >= 7 ? colors.success : score >= 5 ? colors.warning : colors.danger;
       pdf.setFillColor(...color);
       if (fillWidth > 0) {
         pdf.roundedRect(x, y + 3, fillWidth, barHeight, 2, 2, 'F');
       }
-      
+
       // Score text
       pdf.setFontSize(10);
       pdf.setTextColor(...colors.text);
@@ -169,18 +169,18 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Main Header Section with better spacing
     pdf.setFillColor(...colors.primary);
     pdf.rect(0, 0, pageWidth, 35, 'F');
-    
+
     // MockMate branding (text-based like navbar)
     pdf.setFontSize(22);
     pdf.setTextColor(...colors.accent);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('MockMate', margin, 18);
-    
+    pdf.text('NextGen', margin, 18);
+
     pdf.setFontSize(10);
     pdf.setTextColor(200, 200, 200);
     pdf.setFont('helvetica', 'normal');
     pdf.text('Interview Analysis Report', margin, 26);
-    
+
     // Report info on the right (no time)
     pdf.setFontSize(9);
     pdf.setTextColor(...colors.accent);
@@ -191,51 +191,51 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
 
     // Performance Overview Section
     addSectionHeader('PERFORMANCE OVERVIEW');
-    
+
     // Score card with better layout
     const scoreCardHeight = 50;
     checkPageBreak(scoreCardHeight + 15);
-    
+
     // Gradient background for score card
     pdf.setFillColor(248, 250, 252);
     pdf.roundedRect(margin, currentY, contentWidth, scoreCardHeight, 5, 5, 'F');
-    
+
     pdf.setDrawColor(200, 200, 200);
     pdf.setLineWidth(0.5);
     pdf.roundedRect(margin, currentY, contentWidth, scoreCardHeight, 5, 5, 'D');
-    
+
     // Large score display
     pdf.setFontSize(42);
-    const scoreColor = analysisData.analysis.overallScore >= 8 ? colors.success : 
-                       analysisData.analysis.overallScore >= 6 ? colors.warning : colors.danger;
+    const scoreColor = analysisData.analysis.overallScore >= 8 ? colors.success :
+      analysisData.analysis.overallScore >= 6 ? colors.warning : colors.danger;
     pdf.setTextColor(...scoreColor);
     pdf.setFont('helvetica', 'bold');
     pdf.text(`${analysisData.analysis.overallScore}`, margin + 20, currentY + 32);
     pdf.setFont('helvetica', 'normal');
-    
+
     pdf.setFontSize(16);
     pdf.setTextColor(...colors.text);
     pdf.text('/10', margin + 50, currentY + 32);
-    
+
     // Grade and performance info
     pdf.setFontSize(16);
     pdf.setTextColor(...colors.primary);
     pdf.setFont('helvetica', 'bold');
     pdf.text(`Grade: ${analysisData.analysis.grade}`, margin + 85, currentY + 20);
-    
+
     pdf.setFontSize(12);
     pdf.setTextColor(...colors.text);
     pdf.setFont('helvetica', 'normal');
     pdf.text(`Performance Level: ${analysisData.analysis.performance}`, margin + 85, currentY + 32);
-    
+
     currentY += scoreCardHeight + 20;
 
     // Skills Assessment Section
     addSectionHeader('SKILLS ASSESSMENT');
-    
+
     const skillsCardHeight = 80;
     checkPageBreak(skillsCardHeight + 15);
-    
+
     pdf.setFillColor(...colors.cardBg);
     pdf.roundedRect(margin, currentY, contentWidth, skillsCardHeight, 3, 3, 'F');
     pdf.setDrawColor(220, 220, 220);
@@ -252,12 +252,12 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
       const skillY = currentY + 15 + (index * 15);
       addProgressBar(skill.name, skill.score, margin + 10, skillY, 130);
     });
-    
+
     currentY += skillsCardHeight + 20;
 
     // Interview Details Section
     addSectionHeader('INTERVIEW DETAILS');
-    
+
     // Question subsection
     pdf.setFontSize(12);
     pdf.setTextColor(...colors.text);
@@ -265,12 +265,12 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     pdf.text('Question Asked:', margin, currentY);
     pdf.setFont('helvetica', 'normal');
     currentY += 10;
-    
+
     checkPageBreak(35);
     pdf.setFillColor(245, 245, 245);
     const questionHeight = Math.max(30, Math.ceil(analysisData.interview.question.length / 80) * 6 + 15);
     pdf.roundedRect(margin, currentY, contentWidth, questionHeight, 3, 3, 'F');
-    
+
     pdf.setFontSize(10);
     pdf.setTextColor(...colors.text);
     currentY = addWrappedText(analysisData.interview.question, margin + 8, currentY + 10, contentWidth - 16, 6);
@@ -283,20 +283,20 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
       `Average Speaking Rate: ${Math.round(analysisData.interview.wordCount / analysisData.interview.estimatedDuration)} words per minute`,
       `Response Quality: ${analysisData.analysis.performance}`
     ];
-    
+
     addInfoCard(statsInfo, [248, 250, 252]);
 
     // Enhanced Response Section
     if (analysisData.analysis.refinedAnswer) {
       addSectionHeader('ENHANCED RESPONSE');
-      
+
       checkPageBreak(45);
       pdf.setFillColor(240, 248, 255);
       const responseHeight = Math.max(35, Math.ceil(analysisData.analysis.refinedAnswer.length / 70) * 6 + 20);
       pdf.roundedRect(margin, currentY, contentWidth, responseHeight, 3, 3, 'F');
       pdf.setDrawColor(59, 130, 246);
       pdf.roundedRect(margin, currentY, contentWidth, responseHeight, 3, 3, 'D');
-      
+
       pdf.setFontSize(10);
       pdf.setTextColor(...colors.text);
       currentY = addWrappedText(analysisData.analysis.refinedAnswer, margin + 8, currentY + 10, contentWidth - 16, 6);
@@ -306,7 +306,7 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Strengths Section
     if (analysisData.analysis.strengths && analysisData.analysis.strengths.length > 0) {
       addSectionHeader('KEY STRENGTHS');
-      
+
       const strengthsContent = analysisData.analysis.strengths.map(strength => `• ${strength}`);
       addInfoCard(strengthsContent, [240, 253, 244], colors.success);
     }
@@ -314,7 +314,7 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Areas for Improvement Section
     if (analysisData.analysis.improvements && analysisData.analysis.improvements.length > 0) {
       addSectionHeader('AREAS FOR IMPROVEMENT');
-      
+
       const improvementsContent = analysisData.analysis.improvements.map(improvement => `• ${improvement}`);
       addInfoCard(improvementsContent, [255, 251, 235], colors.warning);
     }
@@ -322,7 +322,7 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Key Takeaways Section
     if (analysisData.analysis.keyTakeaways && analysisData.analysis.keyTakeaways.length > 0) {
       addSectionHeader('KEY TAKEAWAYS');
-      
+
       const takeawaysContent = analysisData.analysis.keyTakeaways.map((takeaway, index) => `${index + 1}. ${takeaway}`);
       addInfoCard(takeawaysContent, [249, 250, 251]);
     }
@@ -330,29 +330,29 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     // Overall Feedback Section
     if (analysisData.analysis.overallFeedback) {
       addSectionHeader('OVERALL FEEDBACK');
-      
+
       checkPageBreak(50);
       pdf.setFillColor(249, 250, 251);
       const feedbackHeight = Math.max(40, Math.ceil(analysisData.analysis.overallFeedback.length / 70) * 6 + 25);
       pdf.roundedRect(margin, currentY, contentWidth, feedbackHeight, 3, 3, 'F');
       pdf.setDrawColor(200, 200, 200);
       pdf.roundedRect(margin, currentY, contentWidth, feedbackHeight, 3, 3, 'D');
-      
+
       // Quote styling
       pdf.setFontSize(24);
       pdf.setTextColor(180, 180, 180);
       pdf.text('"', margin + 8, currentY + 20);
-      
+
       pdf.setFontSize(11);
       pdf.setTextColor(...colors.text);
       pdf.setFont('helvetica', 'italic');
       currentY = addWrappedText(analysisData.analysis.overallFeedback, margin + 15, currentY + 15, contentWidth - 30, 6);
       pdf.setFont('helvetica', 'normal');
-      
+
       pdf.setFontSize(24);
       pdf.setTextColor(180, 180, 180);
       pdf.text('"', contentWidth + margin - 15, currentY + 10);
-      
+
       currentY += 25;
     }
 
@@ -360,26 +360,26 @@ export const generateInterviewReportPDF = async (analysisData, options = {}) => 
     const totalPages = pdf.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       pdf.setPage(i);
-      
+
       // Footer background
       pdf.setFillColor(...colors.primary);
       pdf.rect(0, pageHeight - 15, pageWidth, 15, 'F');
-      
+
       // Footer content
       pdf.setFontSize(9);
       pdf.setTextColor(...colors.accent);
-      pdf.text('MockMate', margin, pageHeight - 7);
-      
+      pdf.text('NextGen', margin, pageHeight - 7);
+
       pdf.setTextColor(200, 200, 200);
       pdf.text('AI Interview Coach - Professional Analysis Report', margin + 35, pageHeight - 7);
-      
+
       pdf.setTextColor(...colors.accent);
       pdf.text(`Page ${i} of ${totalPages}`, pageWidth - 35, pageHeight - 7);
     }
 
     // Save the PDF
     pdf.save(filename);
-    
+
     return {
       success: true,
       filename,

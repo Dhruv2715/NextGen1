@@ -11,6 +11,7 @@ const sessionRoutes = require('./routes/sessionRoutes')
 const questionRoutes = require('./routes/questionRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
+const applicationRoutes = require('./routes/applicationRoutes');
 const { protect } = require("./middlewares/authMiddleware");
 const { generateInterviewQuestions, generateInterviewQuestion, generateConceptExplanation, analyzeTranscript, cleanupTranscript, generatePDFData } = require("./controllers/aiController");
 
@@ -24,8 +25,8 @@ const io = new Server(server, {
       "http://localhost:5174",
       "http://127.0.0.1:5173",
       "http://127.0.0.1:5174",
-      "https://mockmateapp.vercel.app",
-      "https://mockmate.vercel.app",
+      "https://nextgen-app.vercel.app",
+      "https://nextgen.vercel.app",
       /\.vercel\.app$/,
       /\.netlify\.app$/,
       /\.onrender\.com$/,
@@ -44,8 +45,7 @@ app.use(
       "http://localhost:5174",
       "http://127.0.0.1:5173",
       "http://127.0.0.1:5174",
-      "https://mockmateapp.vercel.app",
-      "https://mockmate.vercel.app",
+      "https://nextgen-app.vercel.app",
       /\.vercel\.app$/,
       /\.netlify\.app$/,
       /\.onrender\.com$/,
@@ -69,6 +69,7 @@ app.use('/api/sessions', sessionRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/interviews', interviewRoutes);
+app.use('/api/applications', applicationRoutes);
 
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-question", protect, generateInterviewQuestion);

@@ -11,7 +11,7 @@ const RoleInfoHeader = ({
 
   return (
     <div className="bg-black relative overflow-hidden">
-      {/* Repeating MOCKMATE background */}
+      {/* Repeating NEXTGEN background */}
       <div
         className="absolute inset-0 z-0 pointer-events-none select-none"
         style={{
@@ -56,7 +56,7 @@ const RoleInfoHeader = ({
           {Array.from({ length: 8 }).map((_, row) => (
             <div key={row} style={{ width: "90%", display: "flex", justifyContent: "center" }}>
               {Array.from({ length: 15 }).map((_, col) => (
-                <span key={col} style={{ margin: "0 8px 5px 6px" }}>MOCKMATE</span>
+                <span key={col} style={{ margin: "0 8px 5px 6px" }}>NEXTGEN</span>
               ))}
             </div>
           ))}

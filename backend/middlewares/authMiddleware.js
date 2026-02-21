@@ -35,4 +35,30 @@ const protect = async (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+// Middleware to optionally identify user (doesn't fail if no token)
+const optionalProtect = async (req, res, next) => {
+    try {
+        let token = req.headers.authorization;
+
+        if (token && token.startsWith("Bearer")) {
+            token = token.split(" ")[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findById(decoded.id).select("-password");
+
+            if (user) {
+                req.user = {
+                    id: user._id.toString(),
+                    email: user.email,
+                    name: user.name,
+                    role: user.role,
+                };
+            }
+        }
+        next();
+    } catch (error) {
+        // If token fails, we just proceed without user (or could log it)
+        next();
+    }
+};
+
+module.exports = { protect, optionalProtect };

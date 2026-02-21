@@ -10,7 +10,9 @@ import {
   ArrowRight,
   ClipboardList,
   Target,
-  FileText
+  FileText,
+  Clock,
+  XCircle
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 
@@ -20,6 +22,11 @@ const CandidateDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+
+  const [applyingJob, setApplyingJob] = useState(null);
+  const [bio, setBio] = useState('');
+  const [resumeUrl, setResumeUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -41,14 +48,50 @@ const CandidateDashboard = () => {
     }
   };
 
-  const handleApply = async (jobId) => {
+  const handleApplyClick = (job) => {
+    if (job.application_status === 'rejected') {
+      const cooldownDays = 15;
+      const cooldownMillis = cooldownDays * 24 * 60 * 60 * 1000;
+      const timeSinceRejection = Date.now() - new Date(job.rejection_date).getTime();
+
+      if (timeSinceRejection < cooldownMillis) {
+        const daysRemaining = Math.ceil((cooldownMillis - timeSinceRejection) / (1000 * 60 * 60 * 24));
+        alert(`You were recently rejected for this position. You can re-apply in ${daysRemaining} days.`);
+        return;
+      }
+    }
+    setApplyingJob(job);
+  };
+
+  const submitApplication = async (e) => {
+    e.preventDefault();
+    try {
+      setSubmitting(true);
+      await axiosInstance.post('/api/applications/apply', {
+        job_id: applyingJob.id,
+        bio,
+        resume_url: resumeUrl
+      });
+      setApplyingJob(null);
+      setBio('');
+      setResumeUrl('');
+      fetchData();
+      alert('Application submitted successfully! Wait for interviewer approval.');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to submit application.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleStartInterview = async (jobId) => {
     try {
       const response = await axiosInstance.post('/api/interviews', {
         job_id: jobId,
       });
       navigate(`/interview-room/${response.data.id}`);
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to apply. Please try again.');
+      alert(err.response?.data?.message || 'Failed to start interview.');
     }
   };
 
@@ -75,7 +118,59 @@ const CandidateDashboard = () => {
 
   return (
     <DashboardLayout>
+      {/* Apply Modal */}
+      {applyingJob && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in zoom-in duration-200">
+            <div className="p-8 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+              <h2 className="text-2xl font-bold">Apply for {applyingJob.title}</h2>
+              <p className="text-blue-100 text-sm mt-1">Submit your details for interviewer review</p>
+            </div>
+            <form onSubmit={submitApplication} className="p-8 space-y-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-gray-700">Self Introduction (Bio)</label>
+                <textarea
+                  required
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none min-h-[100px]"
+                  placeholder="Tell the interviewer briefly about yourself..."
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-bold text-gray-700">Resume URL</label>
+                <input
+                  type="url"
+                  required
+                  value={resumeUrl}
+                  onChange={(e) => setResumeUrl(e.target.value)}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
+                  placeholder="Link to your Google Drive/Dropbox resume..."
+                />
+              </div>
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setApplyingJob(null)}
+                  className="flex-1 py-3.5 px-6 rounded-xl text-gray-600 font-bold text-sm bg-gray-100 hover:bg-gray-200 transition-all active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 py-3.5 px-6 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95 disabled:opacity-50"
+                >
+                  {submitting ? 'Submitting...' : 'Submit Bio & Resume'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        {/* ... (Header logic remains same) */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Candidate Dashboard</h1>
           <p className="mt-1 text-gray-500 font-medium italic">Your next career move starts here.</p>
@@ -121,8 +216,9 @@ const CandidateDashboard = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {filteredJobs.map((job) => {
-                const existingApp = interviews.find(i => i.job_id?._id === job.id || i.job_id === job.id);
-                const isCompleted = existingApp?.status === 'completed';
+                const existingInterview = interviews.find(i => i.job_id?._id === job.id || i.job_id === job.id);
+                const isCompleted = existingInterview?.status === 'completed';
+                const status = job.application_status;
 
                 return (
                   <div key={job.id} className="bg-white rounded-3xl border border-gray-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
@@ -138,6 +234,16 @@ const CandidateDashboard = () => {
                       </div>
                     </div>
 
+                    {/* Status Badge */}
+                    {status && (
+                      <div className={`absolute top-4 right-4 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' :
+                        status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                          'bg-amber-50 text-amber-700 border-amber-200'
+                        }`}>
+                        {status}
+                      </div>
+                    )}
+
                     <p className="text-sm text-gray-500 mb-6 line-clamp-3 leading-relaxed flex-grow">
                       {job.description || "No description provided."}
                     </p>
@@ -150,18 +256,48 @@ const CandidateDashboard = () => {
                       ))}
                     </div>
 
-                    <button
-                      onClick={() => handleApply(job.id)}
-                      className={`w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl transition-all font-bold text-sm ${isCompleted
-                        ? 'bg-green-50 text-green-700 border-2 border-green-100'
-                        : existingApp
-                          ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
-                          : 'bg-gray-900 text-white shadow-lg shadow-gray-200'
-                        } active:scale-95`}
-                    >
-                      <PlayCircle size={18} />
-                      {isCompleted ? 'View Performance' : existingApp ? 'Resume Interview' : 'Apply & Start'}
-                    </button>
+                    {!status && (
+                      <button
+                        onClick={() => handleApplyClick(job)}
+                        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gray-900 text-white shadow-lg shadow-gray-200 transition-all font-bold text-sm active:scale-95"
+                      >
+                        <FileText size={18} />
+                        Apply for Job
+                      </button>
+                    )}
+
+                    {status === 'pending' && (
+                      <button
+                        disabled
+                        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gray-100 text-gray-400 border border-gray-200 transition-all font-bold text-sm cursor-not-allowed"
+                      >
+                        <Clock size={18} />
+                        Review Pending
+                      </button>
+                    )}
+
+                    {status === 'rejected' && (
+                      <button
+                        onClick={() => handleApplyClick(job)}
+                        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-red-50 text-red-700 border border-red-100 transition-all font-bold text-sm active:scale-95"
+                      >
+                        <XCircle size={18} />
+                        Contact Re-applied
+                      </button>
+                    )}
+
+                    {status === 'approved' && (
+                      <button
+                        onClick={() => isCompleted ? null : handleStartInterview(job.id)}
+                        className={`w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl transition-all font-bold text-sm ${isCompleted
+                          ? 'bg-green-50 text-green-700 border-2 border-green-100'
+                          : 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                          } active:scale-95`}
+                      >
+                        <PlayCircle size={18} />
+                        {isCompleted ? 'View Performance' : 'Start Assessment'}
+                      </button>
+                    )}
                   </div>
                 );
               })}

@@ -8,14 +8,14 @@ const {
   deleteJob,
   getJobInterviews,
 } = require("../controllers/jobController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, optionalProtect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 router.post("/", protect, createJob);
-router.get("/", getAllJobs);
+router.get("/", optionalProtect, getAllJobs);
 router.get("/my-jobs", protect, getMyJobs);
-router.get("/:id", getJobById);
+router.get("/:id", optionalProtect, getJobById);
 router.put("/:id", protect, updateJob);
 router.delete("/:id", protect, deleteJob);
 router.get("/:id/interviews", protect, getJobInterviews);

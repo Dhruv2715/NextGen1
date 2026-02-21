@@ -11,7 +11,8 @@ import {
     CheckCircle,
     XCircle,
     Edit,
-    ArrowLeft
+    ArrowLeft,
+    FileText
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 
@@ -29,6 +30,10 @@ const InterviewerJobs = () => {
     const [filterStatus, setFilterStatus] = useState('all');
     const navigate = useNavigate();
 
+    const [applicants, setApplicants] = useState([]);
+    const [viewingApplicantsJob, setViewingApplicantsJob] = useState(null);
+    const [updatingAppId, setUpdatingAppId] = useState(null);
+
     useEffect(() => {
         fetchJobs();
     }, []);
@@ -42,6 +47,28 @@ const InterviewerJobs = () => {
             console.error('Error fetching jobs:', err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchApplicants = async () => {
+        try {
+            const res = await axiosInstance.get('/api/applications/interviewer');
+            setApplicants(res.data);
+        } catch (err) {
+            console.error('Error fetching applicants:', err);
+        }
+    };
+
+    const handleUpdateStatus = async (appId, status) => {
+        try {
+            setUpdatingAppId(appId);
+            await axiosInstance.put(`/api/applications/${appId}/status`, { status });
+            await fetchApplicants();
+            alert(`Application ${status} successfully!`);
+        } catch (err) {
+            alert('Failed to update status');
+        } finally {
+            setUpdatingAppId(null);
         }
     };
 
@@ -138,6 +165,88 @@ const InterviewerJobs = () => {
 
     return (
         <DashboardLayout>
+            {/* Applicant Review Modal */}
+            {viewingApplicantsJob && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in duration-200">
+                        <div className="p-8 bg-gradient-to-r from-blue-900 to-indigo-950 text-white flex justify-between items-center">
+                            <div>
+                                <h2 className="text-2xl font-bold">Applicants: {viewingApplicantsJob.title}</h2>
+                                <p className="text-blue-300 text-sm mt-1 tracking-wide font-medium">Review and manage candidate assessments</p>
+                            </div>
+                            <button
+                                onClick={() => setViewingApplicantsJob(null)}
+                                className="p-2 hover:bg-white/10 rounded-xl transition-colors"
+                            >
+                                <XCircle size={24} />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-8 space-y-4 bg-gray-50/50">
+                            {applicants.filter(a => (a.job_id?._id || a.job_id) === viewingApplicantsJob.id).length === 0 ? (
+                                <div className="py-20 text-center">
+                                    <Users size={48} className="mx-auto text-gray-300 mb-4" />
+                                    <p className="text-gray-500 font-bold">No applications yet for this position.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 gap-4">
+                                    {applicants.filter(a => (a.job_id?._id || a.job_id) === viewingApplicantsJob.id).map(app => (
+                                        <div key={app.id} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:border-blue-200 transition-all">
+                                            <div className="flex gap-4 items-start flex-1">
+                                                <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 font-black text-lg">
+                                                    {app.candidate?.name?.[0] || 'C'}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <h4 className="font-bold text-gray-900 truncate">{app.candidate?.name}</h4>
+                                                    <p className="text-xs text-gray-400 font-medium mb-2">{app.candidate?.email}</p>
+                                                    <div className="p-3 bg-gray-50 rounded-xl text-xs text-gray-600 border border-gray-100 italic">
+                                                        "{app.bio || 'No bio provided.'}"
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col items-end gap-3 w-full md:w-auto mt-2 md:mt-0">
+                                                <a
+                                                    href={app.resume_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-2 text-xs font-black text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors bg-blue-50 px-3 py-1.5 rounded-lg"
+                                                >
+                                                    <FileText size={14} /> View Resume
+                                                </a>
+
+                                                {app.status === 'pending' ? (
+                                                    <div className="flex gap-2 w-full">
+                                                        <button
+                                                            disabled={updatingAppId === app.id}
+                                                            onClick={() => handleUpdateStatus(app.id, 'approved')}
+                                                            className="flex-1 py-2 px-4 bg-green-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-green-100 hover:bg-green-700 transition-all active:scale-95"
+                                                        >
+                                                            Approve
+                                                        </button>
+                                                        <button
+                                                            disabled={updatingAppId === app.id}
+                                                            onClick={() => handleUpdateStatus(app.id, 'rejected')}
+                                                            className="flex-1 py-2 px-4 bg-red-50 text-red-600 rounded-xl text-xs font-bold border border-red-100 hover:bg-red-100 transition-all active:scale-95"
+                                                        >
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'
+                                                        }`}>
+                                                        {app.status}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="mb-8">
                 <button
                     onClick={() => navigate('/interviewer/dashboard')}
@@ -284,8 +393,8 @@ const InterviewerJobs = () => {
                                     <button
                                         onClick={() => handleToggleStatus(job)}
                                         className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg transition-all border ${job.status === 'active'
-                                                ? 'bg-green-50 text-green-700 border-green-100'
-                                                : 'bg-gray-50 text-gray-500 border-gray-200'
+                                            ? 'bg-green-50 text-green-700 border-green-100'
+                                            : 'bg-gray-50 text-gray-500 border-gray-200'
                                             }`}
                                     >
                                         {job.status}
@@ -309,7 +418,14 @@ const InterviewerJobs = () => {
                                 </div>
                             </div>
 
-                            <h3 className="text-xl font-bold text-gray-900 mb-2 truncate group-hover:text-blue-600 transition-colors">
+                            <h3
+                                onClick={async () => {
+                                    await fetchApplicants();
+                                    setViewingApplicantsJob(job);
+                                }}
+                                className="text-xl font-bold text-gray-900 mb-2 truncate hover:text-blue-600 transition-colors cursor-pointer"
+                                title="Click to review applicants"
+                            >
                                 {job.title}
                             </h3>
                             <p className="text-sm text-gray-500 mb-6 line-clamp-3 leading-relaxed flex-grow">
@@ -317,13 +433,20 @@ const InterviewerJobs = () => {
                             </p>
 
                             <div className="flex items-center gap-6 mb-6 p-4 bg-gray-50/50 rounded-2xl border border-gray-100/50">
-                                <div className="flex flex-col">
+                                <button
+                                    onClick={async () => {
+                                        await fetchApplicants();
+                                        setViewingApplicantsJob(job);
+                                    }}
+                                    className="flex flex-col hover:opacity-70 transition-opacity text-left"
+                                >
                                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Applicants</span>
-                                    <div className="flex items-center gap-2 pt-1">
+                                    <div className="flex items-center gap-2 pt-1 font-bold">
                                         <span className="text-blue-700 font-black text-xl leading-none">{job.applicant_count || 0}</span>
                                         <Users size={16} className="text-blue-300" />
+                                        <span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded ml-1">Review</span>
                                     </div>
-                                </div>
+                                </button>
                                 <div className="w-px h-10 bg-gray-200" />
                                 <div className="flex flex-col">
                                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Posted On</span>
@@ -333,13 +456,24 @@ const InterviewerJobs = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2 mb-6">
                                 {job.required_skills?.map((skill, idx) => (
                                     <span key={idx} className="px-3 py-1 bg-white text-gray-600 text-[10px] font-black uppercase rounded-lg border border-gray-200 shadow-sm">
                                         {skill}
                                     </span>
                                 ))}
                             </div>
+
+                            <button
+                                onClick={async () => {
+                                    await fetchApplicants();
+                                    setViewingApplicantsJob(job);
+                                }}
+                                className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                            >
+                                <Users size={18} />
+                                Review Applicants
+                            </button>
                         </div>
                     ))}
                 </div>

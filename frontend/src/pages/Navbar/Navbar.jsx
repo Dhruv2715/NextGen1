@@ -64,7 +64,7 @@ const Navbar = () => {
                 <h2
                   className="text-xl sm:text-2xl md:text-3xl font-medium text-white truncate flex items-center gap-2"
                   style={{ fontFamily: "'anta', cursive" }}>
-                  Mockmate
+                  NextGen
                   <span
                     className="text-xs sm:text-sm md:text-base -mt-3 sm:-mt-4 cursor-pointer hover:opacity-80 transition-opacity"
                     onClick={(e) => {
@@ -84,7 +84,7 @@ const Navbar = () => {
                             }}
                           >
                             <p style={toastStyle}>
-                              Glad that you wish to know what Mockmate is!!
+                              Glad that you wish to know what NextGen is!!
                             </p>
                           </div>
                         ),
@@ -101,7 +101,7 @@ const Navbar = () => {
                               }}
                             >
                               <p style={toastStyle}>
-                                Hi, I am Akhil, the creator of Mockmate. I built this platform to help you ace your interviews with confidence.
+                                NextGen is your professional AI-powered interview companion, built to help you ace your career goals.
                               </p>
                             </div>
                           ),
@@ -119,7 +119,7 @@ const Navbar = () => {
                               }}
                             >
                               <p style={toastStyle}>
-                                Current Version of Mockmate v1.3 is fully updated with new features. Now you can hope in your friends on a meet and try a interview mode.
+                                NextGen v2.0 is fully updated with advanced AI simulations and dual-portal management.
                               </p>
                             </div>
                           ),

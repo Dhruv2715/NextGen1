@@ -1,6 +1,7 @@
 const Interview = require("../models/Interview");
 const Transcript = require("../models/Transcript");
 const Job = require("../models/Job");
+const Application = require("../models/Application");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -44,6 +45,14 @@ const createInterview = async (req, res) => {
     const job = await Job.findById(job_id);
     if (!job) {
       return res.status(404).json({ message: "Job not found" });
+    }
+
+    // --- ENFORCE APPLICATION APPROVAL ---
+    const application = await Application.findOne({ job_id, candidate_id });
+    if (!application || application.status !== 'approved') {
+      return res.status(403).json({
+        message: "You must apply and be approved by the interviewer before starting this assessment."
+      });
     }
 
     // Check if interview already exists for this candidate and job

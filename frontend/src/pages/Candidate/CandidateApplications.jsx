@@ -9,12 +9,13 @@ import {
     Clock,
     ArrowLeft,
     FileText,
-    Search
+    Search,
+    XCircle
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 
 const CandidateApplications = () => {
-    const [interviews, setInterviews] = useState([]);
+    const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
@@ -26,8 +27,8 @@ const CandidateApplications = () => {
     const fetchApplications = async () => {
         try {
             setLoading(true);
-            const res = await axiosInstance.get('/api/interviews');
-            setInterviews(res.data);
+            const res = await axiosInstance.get('/api/applications/my-applications');
+            setApplications(res.data);
         } catch (err) {
             console.error('Error fetching applications:', err);
         } finally {
@@ -35,12 +36,17 @@ const CandidateApplications = () => {
         }
     };
 
-    const handleResume = (interviewId) => {
-        navigate(`/interview-room/${interviewId}`);
+    const handleResumeInterview = async (jobId) => {
+        try {
+            const res = await axiosInstance.post('/api/interviews', { job_id: jobId });
+            navigate(`/interview-room/${res.data.id}`);
+        } catch (err) {
+            alert(err.response?.data?.message || 'Failed to start interview.');
+        }
     };
 
-    const filteredApplications = interviews.filter(app =>
-        app.job_title?.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredApplications = applications.filter(app =>
+        app.job?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (loading) {
@@ -97,43 +103,51 @@ const CandidateApplications = () => {
                     {filteredApplications.map((app) => (
                         <div key={app.id} className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full relative overflow-hidden">
                             <div className="flex justify-between items-start mb-6">
-                                <div className={`p-3 rounded-2xl ${app.status === 'completed' ? 'bg-green-50 text-green-600' : 'bg-blue-50 text-blue-600'
-                                    }`}>
+                                <div className={`p-3 rounded-2xl ${app.status === 'approved' ? 'bg-green-50 text-green-600' :
+                                    app.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'}`}>
                                     <FileText size={22} />
                                 </div>
-                                <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border shadow-sm ${app.status === 'completed'
-                                        ? 'bg-green-50 text-green-700 border-green-100'
-                                        : 'bg-amber-50 text-amber-700 border-amber-100'
+                                <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border shadow-sm ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-100' :
+                                        app.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-100' :
+                                            'bg-amber-50 text-amber-700 border-amber-100'
                                     }`}>
                                     {app.status}
                                 </span>
                             </div>
 
                             <h3 className="text-xl font-bold text-gray-900 mb-1 truncate group-hover:text-blue-600 transition-colors">
-                                {app.job_title}
+                                {app.job?.title}
                             </h3>
 
-                            <div className="flex items-center gap-4 py-4 mb-6 border-b border-gray-50">
-                                <div className="flex items-center gap-1 text-xs font-bold text-gray-400 uppercase tracking-tighter">
+                            <div className="space-y-3 py-4 mb-6 border-y border-gray-50 mt-4">
+                                <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-tighter">
                                     <Clock size={14} />
                                     Applied {new Date(app.created_at).toLocaleDateString()}
+                                </div>
+                                <div className="text-xs text-gray-500 italic line-clamp-2">
+                                    "{app.bio || 'No bio provided'}"
                                 </div>
                             </div>
 
                             <div className="mt-auto">
-                                {app.status === 'completed' ? (
-                                    <div className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-gray-50 text-gray-500 text-sm font-bold border border-gray-100">
-                                        <CheckCircle size={18} />
-                                        Assessment Completed
-                                    </div>
-                                ) : (
+                                {app.status === 'approved' ? (
                                     <button
-                                        onClick={() => handleResume(app.id)}
+                                        onClick={() => handleResumeInterview(app.job_id)}
                                         className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all font-bold text-sm shadow-lg shadow-blue-100 active:scale-95"
                                     >
                                         <PlayCircle size={18} />
-                                        Resume Assessment
+                                        Enter Interview Room
                                     </button>
+                                ) : app.status === 'rejected' ? (
+                                    <div className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-red-50 text-red-600 text-sm font-bold border border-red-100">
+                                        <XCircle size={18} />
+                                        Application Rejected
+                                    </div>
+                                ) : (
+                                    <div className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-gray-50 text-gray-500 text-sm font-bold border border-gray-100">
+                                        <Clock size={18} />
+                                        Waiting for Review
+                                    </div>
                                 )}
                             </div>
                         </div>
