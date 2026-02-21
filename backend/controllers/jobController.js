@@ -248,6 +248,33 @@ const getJobInterviews = async (req, res) => {
   }
 };
 
+// @desc    Generate AI technical questions for a job
+// @route   POST /api/jobs/:id/generate-questions
+// @access  Private (Interviewer)
+const generateAIQuestions = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    if (job.interviewer_id.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const { generateJobQuestions } = require("../utils/aiService");
+    const questions = await generateJobQuestions(job.title, job.description, job.required_skills);
+
+    job.ai_questions = questions;
+    await job.save();
+
+    res.status(200).json({ questions });
+  } catch (error) {
+    console.error("AI Question Generation error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
   createJob,
   getAllJobs,
@@ -256,4 +283,5 @@ module.exports = {
   updateJob,
   deleteJob,
   getJobInterviews,
+  generateAIQuestions,
 };

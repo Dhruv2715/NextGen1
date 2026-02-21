@@ -229,89 +229,33 @@ const submitInterview = async (req, res) => {
       fullTranscript = transcripts.map(t => t.text_content || t.text).join(' ');
     }
 
-    // Perform AI Analysis
+    // Perform AI Analysis using enhanced central service
+    const { generateInterviewFeedback } = require("../utils/aiService");
     let feedbackJson = null;
-    let score = null;
 
     try {
-      const analysisPrompt = `You are an AI technical interview evaluator. Analyze a candidate's interview performance.
-
-Job Role: ${job.title}
-Required Skills: ${Array.isArray(job.required_skills) ? job.required_skills.join(', ') : ''}
-
-Candidate's Code Submission:
-\`\`\`
-${code_submission || 'No code submitted'}
-\`\`\`
-
-Candidate's Spoken Response (Transcript):
-${fullTranscript || 'No transcript available'}
-
-Please provide a comprehensive evaluation:
-1. Score the candidate out of 10 (consider code quality, explanation clarity, problem-solving approach)
-2. Provide detailed feedback
-3. List strengths
-4. List areas for improvement
-5. Overall assessment
-
-Return ONLY a valid JSON object in this format:
-{
-  "score": 7,
-  "feedback": "Overall assessment of the candidate's performance",
-  "strengths": ["Strength 1", "Strength 2"],
-  "improvements": ["Improvement area 1", "Improvement area 2"],
-  "codeAnalysis": "Analysis of the code submission",
-  "communicationAnalysis": "Analysis of the spoken response"
-}
-
-Important: Return ONLY the JSON, no additional text or markdown formatting.`;
-
-      const result = await model.generateContent(analysisPrompt);
-      const response = await result.response;
-      const rawText = response.text();
-
-      // Robust JSON extraction
-      const extractJSON = (text) => {
-        try {
-          const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-          const start = Math.min(
-            cleaned.indexOf('{') === -1 ? Infinity : cleaned.indexOf('{'),
-            cleaned.indexOf('[') === -1 ? Infinity : cleaned.indexOf('[')
-          );
-          const end = Math.max(cleaned.lastIndexOf('}'), cleaned.lastIndexOf(']'));
-
-          if (start !== Infinity && end !== -1 && end > start) {
-            return JSON.parse(cleaned.substring(start, end + 1));
-          }
-          return JSON.parse(cleaned);
-        } catch (e) {
-          throw e;
-        }
-      };
-
-      try {
-        feedbackJson = extractJSON(rawText);
-        score = feedbackJson.score || null;
-      } catch (parseError) {
-        console.error("Failed to parse AI analysis, raw text:", rawText);
-        // Fallback: create basic feedback
-        feedbackJson = {
-          score: 5,
-          feedback: "Analysis pending - please review manually",
-          strengths: [],
-          improvements: [],
-        };
-      }
+      feedbackJson = await generateInterviewFeedback(
+        job.title,
+        job.required_skills || [],
+        code_submission,
+        fullTranscript
+      );
     } catch (aiError) {
-      console.error("AI analysis error:", aiError);
-      // Continue without AI analysis if it fails
+      console.error("AI Evaluation failed:", aiError);
+      feedbackJson = {
+        score: 5,
+        recommendation: "Manual Review Required",
+        feedback: "The AI evaluator encountered an error. Please review the performance manually.",
+        strengths: [],
+        improvements: []
+      };
     }
 
     // Update interview with code, status, and analysis
     const updatedInterview = await Interview.findByIdAndUpdate(req.params.id, {
       code_submission: code_submission || '',
       status: 'completed',
-      score: score,
+      score: feedbackJson.score || 0,
       feedback_json: feedbackJson,
       completed_at: new Date()
     }, { new: true });

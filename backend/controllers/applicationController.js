@@ -61,6 +61,8 @@ const applyToJob = async (req, res) => {
     }
 };
 
+const { analyzeApplication } = require("../utils/aiService");
+
 // @desc    Get all applications for an interviewer (for their jobs)
 // @route   GET /api/applications/interviewer
 // @access  Private (Interviewer)
@@ -72,10 +74,28 @@ const getInterviewerApplications = async (req, res) => {
 
         const applications = await Application.find({ job_id: { $in: jobIds } })
             .sort({ created_at: -1 })
-            .populate('job', 'title')
+            .populate('job', 'title description required_skills')
             .populate('candidate', 'name email profileImageUrl');
 
-        res.status(200).json(applications);
+        // Trigger AI screening for unscreened applications
+        const screenedApps = await Promise.all(applications.map(async (app) => {
+            if (!app.is_screened && app.job) {
+                const analysis = await analyzeApplication(
+                    app.bio,
+                    app.resume_url,
+                    app.job.required_skills || [],
+                    app.job.description || ""
+                );
+
+                app.ai_score = analysis.score;
+                app.ai_analysis = analysis.analysis;
+                app.is_screened = true;
+                await app.save();
+            }
+            return app;
+        }));
+
+        res.status(200).json(screenedApps);
     } catch (error) {
         console.error("Fetch applications error:", error);
         res.status(500).json({ message: "Server error", error: error.message });

@@ -71,8 +71,8 @@ const CandidateApplications = () => {
                 </button>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">My Applications</h1>
-                        <p className="mt-1 text-gray-500 font-medium italic">Track the status of your technical assessments.</p>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">My Applications</h1>
+                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium italic">Track the status of your technical assessments.</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@ const CandidateApplications = () => {
                     placeholder="Filter by job title..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm"
+                    className="w-full pl-11 pr-4 py-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm dark:text-white"
                 />
             </div>
 
@@ -103,13 +103,18 @@ const CandidateApplications = () => {
                     {filteredApplications.map((app) => (
                         <div key={app.id} className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col h-full relative overflow-hidden">
                             <div className="flex justify-between items-start mb-6">
-                                <div className={`p-3 rounded-2xl ${app.status === 'approved' ? 'bg-green-50 text-green-600' :
-                                    app.status === 'rejected' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'}`}>
+                                <div className={`p-3 rounded-2xl ${app.status === 'approved'
+                                    ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400' :
+                                    app.status === 'rejected'
+                                        ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400' :
+                                        'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400'}`}>
                                     <FileText size={22} />
                                 </div>
-                                <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border shadow-sm ${app.status === 'approved' ? 'bg-green-50 text-green-700 border-green-100' :
-                                        app.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-100' :
-                                            'bg-amber-50 text-amber-700 border-amber-100'
+                                <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg border shadow-sm ${app.status === 'approved'
+                                    ? 'bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 border-green-100 dark:border-green-500/20' :
+                                    app.status === 'rejected'
+                                        ? 'bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 border-red-100 dark:border-red-900/20' :
+                                        'bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-400 border-amber-100 dark:border-amber-500/20'
                                     }`}>
                                     {app.status}
                                 </span>

@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import axiosInstance from '../../utils/axiosInstance';
 import { BeatLoader } from 'react-spinners';
-import { Mic, MicOff, Square, Play, Send } from 'lucide-react';
+import { Mic, MicOff, Square, Play, Send, MessageSquare, AlertTriangle } from 'lucide-react';
+import io from 'socket.io-client';
 
 const InterviewRoom = () => {
   const { interviewId } = useParams();
@@ -16,14 +17,48 @@ const InterviewRoom = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState('scheduled'); // scheduled, in-progress, completed
+
+  // New Collaboration & Chat state
+  const [socket, setSocket] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const speechRecognitionRef = useRef(null);
 
   useEffect(() => {
     fetchInterview();
+
+    // Socket Setup
+    const socketUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const newSocket = io(socketUrl);
+    setSocket(newSocket);
+
+    newSocket.emit("join_room", interviewId);
+
+    newSocket.on("receive_message", (data) => {
+      setChatHistory(prev => [...prev, data]);
+    });
+
+    // Proctoring: Detect tab switches
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && status === 'in-progress') {
+        newSocket.emit("proctoring_flag", {
+          room: interviewId,
+          type: 'TAB_SWITCH',
+          timestamp: new Date()
+        });
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       // Cleanup
+      newSocket.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
@@ -202,6 +237,31 @@ const InterviewRoom = () => {
     }
   };
 
+  const handleCodeChange = (newCode) => {
+    const safeCode = newCode || '';
+    setCode(safeCode);
+    if (socket && status === 'in-progress') {
+      socket.emit("code_change", {
+        room: interviewId,
+        code: safeCode
+      });
+    }
+  };
+
+  const sendChatMessage = () => {
+    if (chatMessage.trim() && socket) {
+      const msgData = {
+        room: interviewId,
+        author: 'Candidate',
+        message: chatMessage,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      socket.emit("send_message", msgData);
+      setChatHistory(prev => [...prev, msgData]);
+      setChatMessage("");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -306,37 +366,83 @@ const InterviewRoom = () => {
           )}
 
           {/* Editor */}
-          <div className="flex-1">
-            <Editor
-              height="100%"
-              defaultLanguage="javascript"
-              value={code}
-              onChange={(value) => setCode(value || '')}
-              theme="vs-dark"
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: 'on',
-                roundedSelection: false,
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-              }}
-            />
+          <div className="flex-1 relative flex overflow-hidden">
+            <div className="flex-1">
+              <Editor
+                height="100%"
+                defaultLanguage="javascript"
+                value={code}
+                onChange={handleCodeChange}
+                theme="vs-dark"
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: 'on',
+                  roundedSelection: false,
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                }}
+              />
+            </div>
+
+            {/* Chat Sidebar Overlay */}
+            {showChat && (
+              <div className="absolute right-0 top-0 bottom-0 w-80 bg-gray-800 border-l border-gray-700 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-200">
+                <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-900/50">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <MessageSquare size={16} className="text-blue-400" /> Live Chat
+                  </h3>
+                  <button onClick={() => setShowChat(false)} className="text-gray-400 hover:text-white">&times;</button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {chatHistory.length === 0 && (
+                    <div className="h-full flex items-center justify-center text-gray-500 italic text-xs">No messages yet...</div>
+                  )}
+                  {chatHistory.map((msg, i) => (
+                    <div key={i} className={`flex flex-col ${msg.author === 'Candidate' ? 'items-end' : 'items-start'}`}>
+                      <div className={`px-3 py-2 rounded-xl text-xs max-w-[90%] ${msg.author === 'Candidate' ? 'bg-blue-600' : 'bg-gray-700 text-gray-200'}`}>
+                        {msg.message}
+                      </div>
+                      <span className="text-[10px] text-gray-500 mt-1">{msg.time}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="p-3 border-t border-gray-700">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={chatMessage}
+                      onChange={(e) => setChatMessage(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
+                      className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-blue-500 outline-none text-white"
+                      placeholder="Type a message..."
+                    />
+                    <button onClick={sendChatMessage} className="p-2 bg-blue-600 rounded-lg hover:bg-blue-700 text-white">
+                      <Send size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button & Chat Toggle */}
           {status === 'in-progress' && (
-            <div className="border-t border-gray-700 p-4">
+            <div className="border-t border-gray-700 p-4 flex gap-3">
+              <button
+                onClick={() => setShowChat(!showChat)}
+                className={`px-4 py-3 rounded-lg border font-bold transition-all flex items-center gap-2 ${showChat ? 'bg-blue-600/20 border-blue-500 text-blue-400' : 'bg-gray-800 border-gray-700 text-white hover:bg-gray-700'}`}
+              >
+                <MessageSquare size={18} />
+                {chatHistory.some(m => m.author !== 'Candidate') && !showChat && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+              </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 px-6 py-3 rounded-lg font-medium"
+                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 px-6 py-3 rounded-lg font-bold shadow-lg shadow-green-900/10 transition-all active:scale-95"
               >
                 {isSubmitting ? (
-                  <>
-                    <BeatLoader color="white" size={8} />
-                    Submitting...
-                  </>
+                  <BeatLoader color="white" size={8} />
                 ) : (
                   <>
                     <Send size={18} />
@@ -348,6 +454,14 @@ const InterviewRoom = () => {
           )}
         </div>
       </div>
+
+      {/* Proctoring Notice Overlay (Only for candidate awareness) */}
+      {status === 'in-progress' && (
+        <div className="fixed bottom-4 left-4 bg-gray-900/80 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-400 pointer-events-none z-50">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          Proctoring Active: Tab switches are monitored
+        </div>
+      )}
     </div>
   );
 };

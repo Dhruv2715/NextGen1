@@ -1,9 +1,10 @@
 const nodemailer = require('nodemailer');
+const { generateEmailTemplate } = require('./emailTemplates');
 
 const sendEmail = async (options) => {
     // Create a transporter
     const transporter = nodemailer.createTransport({
-        service: 'gmail', // or your preferred service
+        service: 'gmail',
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS,
@@ -28,9 +29,8 @@ const sendEmail = async (options) => {
         return info;
     } catch (error) {
         console.error('Email send error:', error);
-        // Silent fail in production to prevent breaking the main flow
         return null;
     }
 };
 
-module.exports = sendEmail;
+module.exports = { sendEmail, generateEmailTemplate };

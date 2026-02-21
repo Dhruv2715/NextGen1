@@ -7,6 +7,7 @@ const JobSchema = new mongoose.Schema(
         required_skills: { type: [String], default: [] },
         interviewer_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
         status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+        ai_questions: { type: [String], default: [] },
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

@@ -7,7 +7,7 @@ const DashboardLayout = ({ children }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen transition-colors duration-300">
             <Navbar onProfileClick={() => setIsProfileOpen(true)} />
 
             <div className="flex pt-16">

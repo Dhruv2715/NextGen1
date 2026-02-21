@@ -79,113 +79,117 @@ import ReviewInterview from "./pages/Interviewer/ReviewInterview.jsx";
 import Settings from "./pages/Home/Settings.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
+import { ThemeProvider } from "./context/ThemeContext.jsx";
+
 const App = () => {
   return (
     <ErrorBoundary>
-      <UserProvider>
-        <Router>
-          <ErrorBoundary>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
+      <ThemeProvider>
+        <UserProvider>
+          <Router>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<LandingPage />} />
 
-              {/* Legacy routes (for backward compatibility) */}
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
-              <Route path="/interview/hr/record" element={<Record />} />
-              <Route path="/interview/session-interview" element={<SessionInterview />} />
-              <Route path="/interview-prep/record" element={<Record />} />
-              <Route path="/resume-view" element={<ResumeViewPage />} />
-              <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
-              <Route path="/interview/live" element={<LiveInterview />} />
+                {/* Legacy routes (for backward compatibility) */}
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/interview-prep/:sessionId" element={<InterviewPrep />} />
+                <Route path="/interview/hr/record" element={<Record />} />
+                <Route path="/interview/session-interview" element={<SessionInterview />} />
+                <Route path="/interview-prep/record" element={<Record />} />
+                <Route path="/resume-view" element={<ResumeViewPage />} />
+                <Route path="/interview-prep/session-interview" element={<SessionInterview />} />
+                <Route path="/interview/live" element={<LiveInterview />} />
 
-              {/* New NextGen Routes */}
-              <Route
-                path="/candidate/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={['candidate']}>
-                    <CandidateDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/candidate/applications"
-                element={
-                  <ProtectedRoute allowedRoles={['candidate']}>
-                    <CandidateApplications />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/candidate/resume"
-                element={
-                  <ProtectedRoute allowedRoles={['candidate']}>
-                    <CandidateResume />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/interview-room/:interviewId"
-                element={
-                  <ProtectedRoute allowedRoles={['candidate']}>
-                    <InterviewRoom />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/interviewer/dashboard"
-                element={
-                  <ProtectedRoute allowedRoles={['interviewer']}>
-                    <InterviewerDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/interviewer/jobs"
-                element={
-                  <ProtectedRoute allowedRoles={['interviewer']}>
-                    <InterviewerJobs />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/interviewer/analytics"
-                element={
-                  <ProtectedRoute allowedRoles={['interviewer']}>
-                    <InterviewerAnalytics />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/interviewer/review/:interviewId"
-                element={
-                  <ProtectedRoute allowedRoles={['interviewer']}>
-                    <ReviewInterview />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  <ProtectedRoute allowedRoles={['candidate', 'interviewer']}>
-                    <Settings />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </ErrorBoundary>
+                {/* New NextGen Routes */}
+                <Route
+                  path="/candidate/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <CandidateDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/candidate/applications"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <CandidateApplications />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/candidate/resume"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <CandidateResume />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interview-room/:interviewId"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <InterviewRoom />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer']}>
+                      <InterviewerDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/jobs"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer']}>
+                      <InterviewerJobs />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/analytics"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer']}>
+                      <InterviewerAnalytics />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/review/:interviewId"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer']}>
+                      <ReviewInterview />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate', 'interviewer']}>
+                      <Settings />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </ErrorBoundary>
 
-          <Toaster
-            toastOptions={{
-              className: "",
-              style: {
-                fontSize: "13px",
-              },
-            }}
-          />
-        </Router>
-        <Analytics />
-      </UserProvider>
+            <Toaster
+              toastOptions={{
+                className: "",
+                style: {
+                  fontSize: "13px",
+                },
+              }}
+            />
+          </Router>
+          <Analytics />
+        </UserProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 };

@@ -12,6 +12,9 @@ const ApplicationSchema = new mongoose.Schema(
             default: 'pending'
         },
         rejection_date: { type: Date, default: null },
+        ai_score: { type: Number, default: 0 },
+        ai_analysis: { type: String, default: '' },
+        is_screened: { type: Boolean, default: false },
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

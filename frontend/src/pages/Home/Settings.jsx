@@ -101,8 +101,8 @@ const Settings = () => {
         <DashboardLayout>
             <div className="max-w-4xl mx-auto">
                 <div className="mb-10">
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Account Settings</h1>
-                    <p className="mt-1 text-gray-500">Manage your personal information, security, and account preferences</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Account Settings</h1>
+                    <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium">Manage your personal information, security, and account preferences</p>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8">
@@ -113,8 +113,8 @@ const Settings = () => {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${activeTab === tab.id
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200'
-                                        : 'text-gray-600 hover:bg-white hover:text-gray-900 border border-transparent hover:border-gray-100'
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                                    : 'text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white border border-transparent hover:border-gray-100 dark:hover:border-white/5'
                                     }`}
                             >
                                 <div className="flex items-center gap-3">
@@ -137,29 +137,29 @@ const Settings = () => {
                                             {user?.name?.charAt(0).toUpperCase()}
                                         </div>
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Personal Details</h2>
-                                            <p className="text-sm text-gray-500 font-medium">Update your profile representation</p>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Personal Details</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Update your profile representation</p>
                                         </div>
                                     </div>
 
                                     <form onSubmit={handleUpdateProfile} className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold text-gray-700 ml-1">Full Display Name</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Full Display Name</label>
                                             <input
                                                 type="text"
                                                 value={profileData.name}
                                                 onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
-                                                className="w-full px-5 py-3.5 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+                                                className="w-full px-5 py-3.5 bg-gray-50 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-2xl focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white"
                                                 required
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold text-gray-700 ml-1">Email Address</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
                                             <input
                                                 type="email"
                                                 value={profileData.email}
                                                 readOnly
-                                                className="w-full px-5 py-3.5 bg-gray-100 border border-transparent rounded-2xl text-gray-500 cursor-not-allowed outline-none font-medium"
+                                                className="w-full px-5 py-3.5 bg-gray-100 dark:bg-white/5 border border-transparent rounded-2xl text-gray-500 dark:text-gray-400 cursor-not-allowed outline-none font-medium"
                                             />
                                             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider ml-1">Email cannot be changed manually for security</p>
                                         </div>
@@ -180,36 +180,47 @@ const Settings = () => {
 
                             {activeTab === 'security' && (
                                 <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                                    <div className="flex items-center gap-4 mb-8 text-indigo-600">
-                                        <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center font-bold text-2xl">
-                                            <Lock size={28} />
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-700 dark:text-blue-400 font-bold text-2xl">
+                                            <ShieldCheck size={32} />
                                         </div>
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Password & Access</h2>
-                                            <p className="text-sm text-gray-400 font-medium">Keep your account secure from unauthorized access</p>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Security & Privacy</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Protect your account and credentials</p>
                                         </div>
                                     </div>
 
                                     <form onSubmit={handleUpdatePassword} className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold text-gray-700 ml-1">New Password</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Current Password</label>
+                                            <input
+                                                type="password"
+                                                placeholder="••••••••"
+                                                value={passwordData.currentPassword}
+                                                onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                                                className="w-full px-5 py-3.5 bg-gray-50 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-2xl focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">New Password</label>
                                             <input
                                                 type="password"
                                                 placeholder="••••••••"
                                                 value={passwordData.newPassword}
                                                 onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                                className="w-full px-5 py-3.5 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                                                className="w-full px-5 py-3.5 bg-gray-50 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-2xl focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white"
                                                 required
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-sm font-bold text-gray-700 ml-1">Confirm New Password</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1">Confirm New Password</label>
                                             <input
                                                 type="password"
                                                 placeholder="••••••••"
                                                 value={passwordData.confirmPassword}
                                                 onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                                className="w-full px-5 py-3.5 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                                                className="w-full px-5 py-3.5 bg-gray-50 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-2xl focus:bg-white dark:focus:bg-white/10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-900 dark:text-white"
                                                 required
                                             />
                                         </div>
@@ -218,10 +229,10 @@ const Settings = () => {
                                             <button
                                                 type="submit"
                                                 disabled={loading}
-                                                className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-md active:scale-95 disabled:opacity-50"
+                                                className="flex items-center gap-2 bg-blue-600 text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95 disabled:opacity-50"
                                             >
-                                                <Lock size={18} />
-                                                Update Password
+                                                <Save size={18} />
+                                                Save Changes
                                             </button>
                                         </div>
                                     </form>
@@ -230,32 +241,32 @@ const Settings = () => {
 
                             {activeTab === 'danger' && (
                                 <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-                                    <div className="flex items-center gap-4 mb-8 text-red-600">
-                                        <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center font-bold text-2xl">
-                                            <AlertCircle size={28} />
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-2xl flex items-center justify-center text-red-600 dark:text-red-400 font-bold text-2xl">
+                                            <Trash2 size={32} />
                                         </div>
                                         <div>
-                                            <h2 className="text-xl font-bold text-gray-900">Advanced Controls</h2>
-                                            <p className="text-sm text-red-400 font-medium">Higher-impact actions for your account</p>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Account Controls</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Manage your data and account status</p>
                                         </div>
                                     </div>
 
-                                    <div className="p-6 bg-red-50 rounded-2xl border border-red-100 mb-8 flex items-start gap-4">
+                                    <div className="p-6 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20 mb-8 flex items-start gap-4">
                                         <Trash2 className="text-red-500 mt-1" size={20} />
                                         <div>
-                                            <h4 className="text-red-800 font-bold mb-1">Delete Workspace Data</h4>
-                                            <p className="text-sm text-red-700/80 leading-relaxed">
+                                            <h4 className="text-red-800 dark:text-red-400 font-bold mb-1">Delete Workspace Data</h4>
+                                            <p className="text-sm text-red-700/80 dark:text-red-400/60 leading-relaxed">
                                                 Deleting your account is irreversible. All of your job listings, interview recordings,
                                                 and AI evaluations will be permanently purged from our database.
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="pt-6 border-t border-gray-100 flex justify-start">
+                                    <div className="pt-6 border-t border-gray-100 dark:border-white/5 flex justify-start">
                                         <button
                                             onClick={handleDeleteAccount}
                                             disabled={loading}
-                                            className="group flex items-center gap-3 bg-white text-red-600 border-2 border-red-100 px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 disabled:opacity-50"
+                                            className="group flex items-center gap-3 bg-white dark:bg-white/5 text-red-600 border-2 border-red-100 dark:border-red-900/20 px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95 disabled:opacity-50"
                                         >
                                             <Trash2 size={18} className="transition-transform group-hover:rotate-12" />
                                             Permanently Delete Account

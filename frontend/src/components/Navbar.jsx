@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { Home, LogOut } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = ({ onProfileClick }) => {
   const { user, clearUser } = useContext(UserContext);
@@ -15,7 +16,7 @@ const Navbar = ({ onProfileClick }) => {
   if (!user) return null;
 
   return (
-    <nav className="bg-white border-b border-gray-200 text-gray-900 shadow-sm fixed top-0 w-full z-50 h-16">
+    <nav className="bg-white dark:bg-[#030303] border-b border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-100 shadow-sm fixed top-0 w-full z-50 h-16 transition-colors">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full">
           <div className="flex items-center gap-6">
@@ -47,10 +48,12 @@ const Navbar = ({ onProfileClick }) => {
                 <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></div>
               </div>
               <div className="hidden sm:block">
-                <p className="text-sm font-semibold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">{user.name || 'User'}</p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold font-display">{user.role}</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-blue-600 transition-colors">{user.name || 'User'}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold font-display">{user.role}</p>
               </div>
             </div>
+
+            <ThemeToggle />
 
             <div className="w-px h-8 bg-gray-200" />
 

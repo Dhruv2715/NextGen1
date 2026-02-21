@@ -5,6 +5,8 @@ const path = require("path");
 const connectDB = require("./config/db");
 const http = require("http");
 const { Server } = require("socket.io");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const authRoutes = require('./routes/authRoutes');
 const sessionRoutes = require('./routes/sessionRoutes')
@@ -12,6 +14,9 @@ const questionRoutes = require('./routes/questionRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 const { protect } = require("./middlewares/authMiddleware");
 const { generateInterviewQuestions, generateInterviewQuestion, generateConceptExplanation, analyzeTranscript, cleanupTranscript, generatePDFData } = require("./controllers/aiController");
 
@@ -60,6 +65,18 @@ app.use(
 // Connect to databases
 connectDB();
 
+// Security Middleware
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP for easier development with external scripts/images
+}));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { message: "Too many requests from this IP, please try again after 15 minutes" }
+});
+app.use("/api/", limiter);
+
 // Middleware
 app.use(express.json()); // <-- This must be before your routes
 
@@ -70,6 +87,9 @@ app.use('/api/questions', questionRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-question", protect, generateInterviewQuestion);
@@ -126,10 +146,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data) => {
-    // Add socket.id as author if not present, or trust client?
-    // Client sends author: "User" currently. We will fix client to send socket.id or handle it there.
-    // For now, just relay.
     socket.to(data.room).emit("receive_message", data);
+  });
+
+  // Collaborative Coding Events
+  socket.on("code_change", (data) => {
+    // data = { room, code }
+    socket.to(data.room).emit("code_update", data.code);
+  });
+
+  // Proctoring Events
+  socket.on("proctoring_flag", (data) => {
+    // data = { room, type, timestamp }
+    socket.to(data.room).emit("receive_proctoring_flag", data);
   });
 
   // WebRTC Video Events

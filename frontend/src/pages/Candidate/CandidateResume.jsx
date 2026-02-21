@@ -25,8 +25,8 @@ const CandidateResume = () => {
                 </button>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Resume Builder</h1>
-                        <p className="mt-1 text-gray-500 font-medium italic">Craft a professional profile that stands out to recruiters.</p>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Resume Builder</h1>
+                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium italic">Craft a professional profile that stands out to recruiters.</p>
                     </div>
                     <button
                         className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl hover:bg-black transition-all shadow-md hover:shadow-lg active:scale-95 font-bold"
@@ -39,11 +39,11 @@ const CandidateResume = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* Placeholder for "Current Resume" */}
-                <div className="bg-white rounded-3xl border-2 border-dashed border-gray-100 p-8 flex flex-col items-center justify-center text-center group hover:border-blue-200 transition-all cursor-pointer">
-                    <div className="w-16 h-16 bg-blue-50 text-blue-400 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <div className="bg-white dark:bg-white/5 rounded-3xl border-2 border-dashed border-gray-100 dark:border-white/10 p-8 flex flex-col items-center justify-center text-center group hover:border-blue-200 dark:hover:border-blue-500/30 transition-all cursor-pointer">
+                    <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 text-blue-400 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                         <FileText size={24} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">Import from PDF</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-2">Import from PDF</h3>
                     <p className="text-xs text-gray-400 leading-relaxed px-4">Already have a resume? Import it and we'll extract your skills automatically.</p>
                 </div>
 
@@ -77,17 +77,17 @@ const CandidateResume = () => {
                 </div>
 
                 <div className="space-y-4">
-                    <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-gray-100">
+                    <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-white dark:hover:bg-white/10 hover:shadow-md transition-all border border-transparent hover:border-gray-100 dark:hover:border-white/5">
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-sm">
+                            <div className="w-10 h-10 bg-white dark:bg-white/10 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm">
                                 <FileText size={20} />
                             </div>
                             <div>
-                                <p className="text-sm font-bold text-gray-900">Main_Resume_2026.pdf</p>
+                                <p className="text-sm font-bold text-gray-900 dark:text-white">Main_Resume_2026.pdf</p>
                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Active • Last updated 12h ago</p>
                             </div>
                         </div>
-                        <span className="text-[10px] font-black uppercase text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">View</span>
+                        <span className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-lg">View</span>
                     </div>
                 </div>
             </div>

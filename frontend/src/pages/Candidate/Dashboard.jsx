@@ -172,8 +172,8 @@ const CandidateDashboard = () => {
       <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         {/* ... (Header logic remains same) */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Candidate Dashboard</h1>
-          <p className="mt-1 text-gray-500 font-medium italic">Your next career move starts here.</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Candidate Dashboard</h1>
+          <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium italic">Your next career move starts here.</p>
         </div>
         <div className="flex bg-white p-1 rounded-xl border border-gray-100 shadow-sm">
           <div className="px-4 py-2 text-center border-r border-gray-50">
@@ -197,15 +197,18 @@ const CandidateDashboard = () => {
               placeholder="Search by role, skill, or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium text-gray-700"
+              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium text-gray-700 dark:text-gray-200"
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">Available Positions</h2>
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">{filteredJobs.length} matches found</span>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <h2 className="text-sm font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 flex items-center gap-2">
+              Available Positions
+            </h2>
+            <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">
+              {filteredJobs.length} matches found
+            </div>
           </div>
-
           {filteredJobs.length === 0 ? (
             <div className="bg-white rounded-3xl border-2 border-dashed border-gray-100 p-16 text-center">
               <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -221,9 +224,9 @@ const CandidateDashboard = () => {
                 const status = job.application_status;
 
                 return (
-                  <div key={job.id} className="bg-white rounded-3xl border border-gray-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
+                  <div key={job.id} className="bg-white p-6 rounded-3xl border border-gray-100 dark:border-white/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white">
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white">
                         <Briefcase size={22} />
                       </div>
                       <div className="min-w-0">
@@ -250,7 +253,7 @@ const CandidateDashboard = () => {
 
                     <div className="flex flex-wrap gap-2 mb-8">
                       {job.required_skills?.slice(0, 3).map((s, idx) => (
-                        <span key={idx} className="px-2.5 py-1 bg-gray-50 text-gray-600 text-[10px] font-black uppercase tracking-tighter rounded-lg border border-gray-100">
+                        <span key={idx} className="px-2.5 py-1 bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-400 text-[10px] font-black uppercase tracking-tighter rounded-lg border border-gray-100 dark:border-white/5">
                           {s}
                         </span>
                       ))}
@@ -314,26 +317,26 @@ const CandidateDashboard = () => {
             </h3>
 
             <div className="space-y-4">
-              <Link to="/candidate/applications" className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+              <Link to="/candidate/applications" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
                 <div className="flex items-center gap-3">
-                  <ClipboardList size={18} className="text-gray-400 group-hover:text-blue-600" />
-                  <span className="text-sm font-bold text-gray-700 group-hover:text-blue-700">My Applications</span>
+                  <ClipboardList size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">My Applications</span>
                 </div>
-                <ArrowRight size={14} className="text-gray-300" />
+                <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
               </Link>
-              <Link to="/candidate/resume" className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+              <Link to="/candidate/resume" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
                 <div className="flex items-center gap-3">
-                  <FileText size={18} className="text-gray-400 group-hover:text-blue-600" />
-                  <span className="text-sm font-bold text-gray-700 group-hover:text-blue-700">Resume Builder</span>
+                  <FileText size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">Resume Builder</span>
                 </div>
-                <ArrowRight size={14} className="text-gray-300" />
+                <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
               </Link>
-              <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors group">
+              <button className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
                 <div className="flex items-center gap-3">
-                  <Star size={18} className="text-gray-400 group-hover:text-blue-600" />
-                  <span className="text-sm font-bold text-gray-700 group-hover:text-blue-700">Skill Badges</span>
+                  <Star size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">Skill Badges</span>
                 </div>
-                <ArrowRight size={14} className="text-gray-300" />
+                <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
               </button>
             </div>
 

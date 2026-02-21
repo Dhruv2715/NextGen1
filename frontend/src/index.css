@@ -5,17 +5,135 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "nunito", sans-serif;
+  --font-display: "Urbanist", "nunito", sans-serif;
+
+  /* Standard theme colors */
+  --color-bg-light: #fcfbfc;
+  --color-text-light: #030303;
+  --color-bg-dark: #030303;
+  --color-text-dark: #fcfbfc;
 }
 
+/* Redefine dark mode to strictly follow the .dark class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
+  :root {
+    --bg-main: #fcfbfc;
+    --text-main: #030303;
+    color-scheme: light;
+  }
+
+  .dark {
+    --bg-main: #030303;
+    --text-main: #fcfbfc;
+    color-scheme: dark;
+  }
+
   html {
     font-family: var(--font-display);
+    background-color: var(--bg-main);
+    color: var(--text-main);
   }
 
   body {
-    background-color: #fcfbfc;
+    background-color: var(--bg-main);
+    color: var(--text-main);
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Force theme backgrounds & text colors for common utilities */
+  .bg-white {
+    background-color: var(--bg-main);
+  }
+
+  .dark .bg-white {
+    background-color: #111111;
+  }
+
+  /* Dark charcoal background for cards */
+
+  .bg-gray-50 {
+    background-color: #f9fafb;
+  }
+
+  .dark .bg-gray-50 {
+    background-color: #1a1a1a;
+  }
+
+  .bg-gray-100 {
+    background-color: #f3f4f6;
+  }
+
+  .dark .bg-gray-100 {
+    background-color: #262626;
+  }
+
+  .text-gray-900 {
+    color: #111827;
+  }
+
+  .dark .text-gray-900 {
+    color: #ffffff;
+  }
+
+  .text-gray-800 {
+    color: #1f2937;
+  }
+
+  .dark .text-gray-800 {
+    color: #f3f4f6;
+  }
+
+  .text-gray-700 {
+    color: #374151;
+  }
+
+  .dark .text-gray-700 {
+    color: #e5e7eb;
+  }
+
+  .text-gray-600 {
+    color: #4b5563;
+  }
+
+  .dark .text-gray-600 {
+    color: #9ca3af;
+  }
+
+  .text-gray-500 {
+    color: #6b7280;
+  }
+
+  .dark .text-gray-500 {
+    color: #9ca3af;
+  }
+
+  .text-gray-400 {
+    color: #9ca3af;
+  }
+
+  .dark .text-gray-400 {
+    color: #6b7280;
+  }
+
+  /* Slightly darker for muted text but still visible */
+
+  .border-gray-100 {
+    border-color: #f3f4f6;
+  }
+
+  .dark .border-gray-100 {
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .border-gray-200 {
+    border-color: #e5e7eb;
+  }
+
+  .dark .border-gray-200 {
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }
 

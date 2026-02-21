@@ -5,43 +5,26 @@
 - ✅ Frontend dependencies installed  
 - ✅ Backend .env file exists
 - ✅ Frontend .env file exists
-- ⚠️  **Action Required:** Add PostgreSQL connection to `backend/.env`
+- ✅ MongoDB connection string configured
 
-## 🔧 Required Setup Before Running
+## 🔧 Setup Details
 
-### 1. Add PostgreSQL Database Connection
-
-You need to add one of these to your `backend/.env` file:
-
-**Option A: Using Supabase (Recommended - Free)**
-1. Go to https://supabase.com and create a free account
-2. Create a new project
-3. Go to **SQL Editor** → Paste contents of `backend/database/schema.sql` → Run
-4. Go to **Settings → Database** → Copy connection string
-5. Add to `backend/.env`:
-   ```
-   POSTGRES_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
-   ```
-
-**Option B: Local PostgreSQL**
-1. Install PostgreSQL if needed
-2. Create database: `createdb nextgen`
-3. Run schema: `psql -d nextgen -f backend/database/schema.sql`
-4. Add to `backend/.env`:
-   ```
-   DATABASE_URL=postgresql://username:password@localhost:5432/nextgen
-   ```
+### 1. Database Configuration
+NextGen uses **MongoDB** for its primary database.
+- The connection string is already configured in `backend/.env` under `MONGO_URI`.
+- No additional local database setup is required if using the provided MongoDB Atlas string.
 
 ### 2. Verify Your .env Files
 
-**Backend (`backend/.env`) should have:**
+**Backend (`backend/.env`) includes:**
 ```env
 PORT=5000
-DATABASE_URL=your-postgres-connection-here
-# OR
-POSTGRES_URL=your-supabase-connection-here
-JWT_SECRET=your-jwt-secret-here
-GEMINI_API_KEY=your-gemini-key-here
+MONGO_URI=mongodb+srv://...
+JWT_SECRET=your-jwt-secret
+GEMINI_API_KEY=your-gemini-key
+CLOUDINARY_CLOUD_NAME=...
+EMAIL_USER=...
+EMAIL_PASS=...
 ```
 
 **Frontend (`frontend/.env`) should have:**

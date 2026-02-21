@@ -19,5 +19,6 @@ router.get("/:id", optionalProtect, getJobById);
 router.put("/:id", protect, updateJob);
 router.delete("/:id", protect, deleteJob);
 router.get("/:id/interviews", protect, getJobInterviews);
+router.post("/:id/generate-questions", protect, require("../controllers/jobController").generateAIQuestions);
 
 module.exports = router;
