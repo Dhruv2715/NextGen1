@@ -286,7 +286,7 @@ const updateUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { name, password } = req.body;
+    const { name, password, notificationPreferences } = req.body;
 
     if (name) {
       user.name = name;
@@ -301,6 +301,13 @@ const updateUserProfile = async (req, res) => {
       user.password = await bcrypt.hash(password, salt);
     }
 
+    if (notificationPreferences) {
+      user.notificationPreferences = {
+        ...user.notificationPreferences,
+        ...notificationPreferences
+      };
+    }
+
     const updatedUser = await user.save();
 
     res.json({
@@ -309,6 +316,7 @@ const updateUserProfile = async (req, res) => {
       email: updatedUser.email,
       role: updatedUser.role,
       profileImageUrl: updatedUser.profileImageUrl,
+      notificationPreferences: updatedUser.notificationPreferences
     });
   } catch (error) {
     console.error("Update profile error:", error);

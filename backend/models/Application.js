@@ -11,10 +11,25 @@ const ApplicationSchema = new mongoose.Schema(
             enum: ['pending', 'approved', 'rejected'],
             default: 'pending'
         },
+        stage: { 
+            type: String, 
+            enum: ['Applied', 'Screened', 'Technical', 'HR', 'Offer'], 
+            default: 'Applied' 
+        },
         rejection_date: { type: Date, default: null },
         ai_score: { type: Number, default: 0 },
         ai_analysis: { type: String, default: '' },
         is_screened: { type: Boolean, default: false },
+        offer_details: {
+            compensation: { type: Number },
+            currency: { type: String, default: 'USD' },
+            deadline: { type: Date },
+            candidate_decision: { 
+                type: String, 
+                enum: ['pending', 'accepted', 'declined'], 
+                default: 'pending' 
+            }
+        },
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

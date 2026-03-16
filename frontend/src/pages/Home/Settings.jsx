@@ -9,7 +9,9 @@ import {
     Save,
     AlertCircle,
     CheckCircle2,
-    ChevronRight
+    ChevronRight,
+    Bell,
+    ShieldCheck
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -30,12 +32,23 @@ const Settings = () => {
         confirmPassword: '',
     });
 
+    const [notificationData, setNotificationData] = useState({
+        emailReminders: true,
+        jobAlerts: true,
+    });
+
     useEffect(() => {
         if (user) {
             setProfileData({
                 name: user.name || '',
                 email: user.email || '',
             });
+            if (user.notificationPreferences) {
+                setNotificationData({
+                    emailReminders: user.notificationPreferences.emailReminders ?? true,
+                    jobAlerts: user.notificationPreferences.jobAlerts ?? true,
+                });
+            }
         }
     }, [user]);
 
@@ -91,9 +104,24 @@ const Settings = () => {
         }
     };
 
+    const handleUpdateNotifications = async (updatedPrefs) => {
+        try {
+            setLoading(true);
+            const res = await axiosInstance.put('/api/auth/profile', { notificationPreferences: updatedPrefs });
+            setUser({ ...user, notificationPreferences: res.data.notificationPreferences });
+            setNotificationData(res.data.notificationPreferences);
+            toast.success('Notification settings saved');
+        } catch (err) {
+            toast.error('Failed to update notifications');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const tabs = [
         { id: 'profile', label: 'General Information', icon: <User size={18} /> },
         { id: 'security', label: 'Login & Security', icon: <Lock size={18} /> },
+        { id: 'notifications', label: 'Notifications', icon: <Bell size={18} /> },
         { id: 'danger', label: 'Account Controls', icon: <AlertCircle size={18} /> },
     ];
 
@@ -236,6 +264,48 @@ const Settings = () => {
                                             </button>
                                         </div>
                                     </form>
+                                </div>
+                            )}
+
+                            {activeTab === 'notifications' && (
+                                <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-blue-700 dark:text-blue-400 font-bold text-2xl">
+                                            <Bell size={32} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Communication Preferences</h2>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Control how we contact you</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-white/5 rounded-2xl border border-transparent hover:border-blue-100 transition-all group">
+                                            <div className="flex-1">
+                                                <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Email Reminders</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Receive automated nudges for upcoming or pending assessments.</p>
+                                            </div>
+                                            <button 
+                                                onClick={() => handleUpdateNotifications({ ...notificationData, emailReminders: !notificationData.emailReminders })}
+                                                className={`w-14 h-8 rounded-full relative transition-colors ${notificationData.emailReminders ? 'bg-blue-600' : 'bg-gray-200 dark:bg-white/10'}`}
+                                            >
+                                                <div className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow-sm transition-all ${notificationData.emailReminders ? 'left-7' : 'left-1'}`} />
+                                            </button>
+                                        </div>
+
+                                        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-white/5 rounded-2xl border border-transparent hover:border-blue-100 transition-all group">
+                                            <div className="flex-1">
+                                                <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Job Alerts</h4>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">Get notified when new jobs matching your profile are posted.</p>
+                                            </div>
+                                            <button 
+                                                onClick={() => handleUpdateNotifications({ ...notificationData, jobAlerts: !notificationData.jobAlerts })}
+                                                className={`w-14 h-8 rounded-full relative transition-colors ${notificationData.jobAlerts ? 'bg-blue-600' : 'bg-gray-200 dark:bg-white/10'}`}
+                                            >
+                                                <div className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow-sm transition-all ${notificationData.jobAlerts ? 'left-7' : 'left-1'}`} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
 

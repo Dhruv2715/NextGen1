@@ -11,7 +11,7 @@ const {
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 // Helper function for exponential backoff retry
 const generateContentWithRetry = async (model, prompt, retries = 3, delay = 1000) => {
@@ -116,7 +116,7 @@ const generateInterviewQuestions = async (req, res) => {
 
     // Create a new instance for each request to avoid any caching issues
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Generate content with error handling and retry logic
     const result = await generateContentWithRetry(model, prompt);
@@ -566,25 +566,19 @@ const generateInterviewQuestion = async (req, res) => {
 
     console.log(`Generating singular question for: ${jobTitle}`);
 
-    const prompt = `You are a world-class technical interviewer. Generate ONE high-quality coding question for:
-Job Position: ${jobTitle}
-Skills to focus on: ${requiredSkills}
+    const prompt = `You are a technical interviewer. Generate ONE short coding question for a ${jobTitle}.
 
-The question should:
-1. Be a practical coding problem matching the level of the job.
-2. Be solveable within a 30-40 minute window.
-3. Require the candidate to write code.
+STRICT RULES:
+- The question must be 1-2 sentences MAXIMUM. Short and simple.
+- Example: "Write a function that reverses a string." or "How would you find duplicates in an array?"
+- Relevant skills: ${requiredSkills}
 
-CRITICAL: Return ONLY a raw JSON object. NO markdown, NO code blocks, NO preamble.
-Example Format:
-{
-  "question": "Reverse a linked list without using extra space...",
-  "hint": "Think about using three pointers..."
-}`;
+Return ONLY raw JSON, no markdown, no code blocks.
+Format: { "question": "...", "hint": "..." }`;
 
     // Fresh model instance
     const freshGenAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const freshModel = freshGenAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const freshModel = freshGenAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const result = await generateContentWithRetry(freshModel, prompt);
     const response = await result.response;
@@ -639,11 +633,128 @@ Example Format:
   }
 };
 
+
+// @desc    AI-powered candidate shortlisting
+// @route   POST /api/ai/shortlist-candidates
+// @access  Private
+const shortlistCandidates = async (req, res) => {
+  try {
+    const { jobTitle, jobSkills, candidates } = req.body;
+    if (!jobTitle || !candidates || !candidates.length) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const candidateList = candidates
+      .map((c, i) => `${i + 1}. Name: ${c.name}, Skills: ${(c.skills || []).join(", ")}, Experience: ${c.experience || "N/A"} years`)
+      .join("\n");
+
+    const prompt = `You are an AI hiring assistant. Rank these candidates for the role.
+
+Job: ${jobTitle}
+Required Skills: ${jobSkills}
+
+Candidates:
+${candidateList}
+
+Return ONLY a JSON array. Each item: { "index": 1, "matchScore": 85, "reason": "Strong match because..." }
+Scores: 0-100. No markdown, no code blocks.`;
+
+    const freshGenAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const freshModel = freshGenAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await generateContentWithRetry(freshModel, prompt);
+    const text = result.response.text();
+
+    const rankings = parseAIJSON(text);
+    const enriched = rankings.map((r) => ({
+      ...candidates[r.index - 1],
+      matchScore: r.matchScore,
+      reason: r.reason,
+    }));
+    enriched.sort((a, b) => b.matchScore - a.matchScore);
+    res.status(200).json({ success: true, ranked: enriched });
+  } catch (error) {
+    console.error("Error shortlisting candidates:", error);
+    res.status(500).json({ message: "Failed to shortlist", error: error.message });
+  }
+};
+
+// @desc    Start a mock interview (generate questions)
+// @route   POST /api/ai/mock-interview/start
+// @access  Private
+const startMockInterview = async (req, res) => {
+  try {
+    const { mode, language } = req.body;
+    
+    if (!mode) {
+      return res.status(400).json({ message: "Missing required field: mode" });
+    }
+
+    const { generateMockInterviewQuestions } = require("../utils/aiService");
+    const questions = await generateMockInterviewQuestions(mode, language || "English");
+    
+    res.status(200).json({ success: true, questions });
+  } catch (error) {
+    console.error("Error starting mock interview:", error);
+    res.status(500).json({ message: "Failed to start mock interview", error: error.message });
+  }
+};
+
+// @desc    Submit a mock interview (evaluate transcript)
+// @route   POST /api/ai/mock-interview/submit
+// @access  Private
+const submitMockInterview = async (req, res) => {
+  try {
+    const { mode, transcripts, language } = req.body;
+    
+    if (!mode || !transcripts) {
+      return res.status(400).json({ message: "Missing required fields: mode and transcripts" });
+    }
+
+    let fullTranscript = '';
+    if (Array.isArray(transcripts) && transcripts.length > 0) {
+      fullTranscript = transcripts.map(t => t.text_content || t.text).join(' ');
+    }
+
+    const { generateMockInterviewFeedback } = require("../utils/aiService");
+    const evaluation = await generateMockInterviewFeedback(mode, fullTranscript, language || "English");
+    
+    res.status(200).json({ success: true, evaluation });
+  } catch (error) {
+    console.error("Error evaluating mock interview:", error);
+    res.status(500).json({ message: "Failed to evaluate mock interview", error: error.message });
+  }
+};
+
+// @desc    Analyze skill gap between resume and job description
+// @route   POST /api/ai/skill-gap
+// @access  Private
+const extractSkillGap = async (req, res) => {
+  try {
+    const { resumeText, jobDescription, language } = req.body;
+    
+    if (!resumeText || !jobDescription) {
+      return res.status(400).json({ message: "Missing required fields: resumeText and jobDescription" });
+    }
+
+    const { analyzeSkillGap } = require("../utils/aiService");
+    const evaluation = await analyzeSkillGap(resumeText, jobDescription, language || "English");
+    
+    res.status(200).json({ success: true, evaluation });
+  } catch (error) {
+    console.error("Error evaluating skill gap:", error);
+    res.status(500).json({ message: "Failed to evaluate skill gap", error: error.message });
+  }
+};
+
 module.exports = {
   generateInterviewQuestions,
   generateInterviewQuestion,
   generateConceptExplanation,
   analyzeTranscript,
   cleanupTranscript,
-  generatePDFData
+  generatePDFData,
+  shortlistCandidates,
+  startMockInterview,
+  submitMockInterview,
+  extractSkillGap
 };

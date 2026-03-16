@@ -1,0 +1,11 @@
+{
+  "interviewer_dashboard": {
+    "welcome": "Welcome back",
+    "overview": "Overview of your hiring pipeline and active listings.",
+    "new_job": "Create New Job",
+    "quick_stats": "Quick Stats",
+    "active_jobs": "Active Jobs",
+    "total_applications": "Total Applications",
+    "interviews_completed": "Interviews Completed"
+  }
+}

@@ -2,7 +2,7 @@ const Job = require("../models/Job");
 const Interview = require("../models/Interview");
 const User = require("../models/User");
 const Application = require("../models/Application");
-const sendEmail = require("../utils/emailService");
+const { sendEmail } = require("../utils/emailService");
 
 // Helper to format job response with flattened interviewer details for compatibility
 const formatJob = (job) => {

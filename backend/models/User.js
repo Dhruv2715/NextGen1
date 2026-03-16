@@ -8,9 +8,14 @@ const UserSchema = new mongoose.Schema(
     profileImageUrl: { type: String, default: null },
     resumeLink: { type: String, default: null },
     initials: { type: String },
-    role: { type: String, enum: ['candidate', 'interviewer'], default: 'candidate' } // Added role field
+    role: { type: String, enum: ['admin', 'hiring_manager', 'recruiter', 'interviewer', 'candidate'], default: 'candidate' },
+    language: { type: String, enum: ['en', 'es', 'fr', 'de', 'hi'], default: 'en' },
+    notificationPreferences: {
+      emailReminders: { type: Boolean, default: true },
+      jobAlerts: { type: Boolean, default: true }
+    }
   },
-  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } } // Map timestamps to match pg conventions slightly or just standard createdAt
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
 module.exports = mongoose.model("User", UserSchema);

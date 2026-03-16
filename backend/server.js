@@ -17,8 +17,12 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const questionBankRoutes = require('./routes/questionBankRoutes');
+const scorecardRoutes = require('./routes/scorecardRoutes');
+const availabilityRoutes = require('./routes/availabilityRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 const { protect } = require("./middlewares/authMiddleware");
-const { generateInterviewQuestions, generateInterviewQuestion, generateConceptExplanation, analyzeTranscript, cleanupTranscript, generatePDFData } = require("./controllers/aiController");
+const { generateInterviewQuestions, generateInterviewQuestion, generateConceptExplanation, analyzeTranscript, cleanupTranscript, generatePDFData, shortlistCandidates, startMockInterview, submitMockInterview, extractSkillGap } = require("./controllers/aiController");
 
 const app = express();
 const server = http.createServer(app);
@@ -90,6 +94,10 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/question-bank', questionBankRoutes);
+app.use('/api/scorecards', scorecardRoutes);
+app.use('/api/availability', availabilityRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.post("/api/ai/generate-questions", protect, generateInterviewQuestions);
 app.post("/api/ai/generate-question", protect, generateInterviewQuestion);
@@ -97,6 +105,14 @@ app.post("/api/ai/generate-explanation", protect, generateConceptExplanation);
 app.post("/api/ai/analyze-transcript", protect, analyzeTranscript);
 app.post("/api/ai/cleanup-transcript", protect, cleanupTranscript);
 app.post("/api/ai/generate-pdf-data", protect, generatePDFData);
+app.post("/api/ai/shortlist-candidates", protect, shortlistCandidates);
+app.post("/api/ai/mock-interview/start", protect, startMockInterview);
+app.post("/api/ai/mock-interview/submit", protect, submitMockInterview);
+app.post("/api/ai/skill-gap", protect, extractSkillGap);
+
+// Initialize Notification Scheduler (Cron Jobs)
+const { initNotificationScheduler } = require("./utils/notificationScheduler");
+initNotificationScheduler();
 
 // Health check endpoint for debugging
 app.get("/health", (req, res) => {

@@ -12,7 +12,8 @@ import {
   Target,
   FileText,
   Clock,
-  XCircle
+  XCircle,
+  TrendingUp
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 
@@ -324,10 +325,24 @@ const CandidateDashboard = () => {
                 </div>
                 <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
               </Link>
+              <Link to="/candidate/analytics" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <TrendingUp size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">History & Analytics</span>
+                </div>
+                <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
+              </Link>
               <Link to="/candidate/resume" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
                 <div className="flex items-center gap-3">
                   <FileText size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
                   <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">Resume Builder</span>
+                </div>
+                <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
+              </Link>
+              <Link to="/candidate/skill-gap" className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors group">
+                <div className="flex items-center gap-3">
+                  <Target size={18} className="text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300 group-hover:text-blue-700 dark:group-hover:text-blue-400">Skill Gap Analyzer</span>
                 </div>
                 <ArrowRight size={14} className="text-gray-300 dark:text-gray-600" />
               </Link>
@@ -344,7 +359,10 @@ const CandidateDashboard = () => {
               <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-blue-400">Next Step</p>
               <h4 className="text-lg font-bold mb-2">Practice Mode</h4>
               <p className="text-xs text-gray-400 leading-relaxed mb-6">Brush up on your algorithms before the real assessment.</p>
-              <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all border border-white/10">
+              <button 
+                onClick={() => navigate('/candidate/mock-interview')}
+                className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all border border-white/10"
+              >
                 Enter Arena
               </button>
             </div>

@@ -71,11 +71,20 @@ import LiveInterview from "./pages/Interview/LiveInterview/index.jsx";
 import CandidateDashboard from "./pages/Candidate/Dashboard.jsx";
 import CandidateApplications from "./pages/Candidate/CandidateApplications.jsx";
 import CandidateResume from "./pages/Candidate/CandidateResume.jsx";
+import CandidatePreparation from "./pages/Candidate/CandidatePreparation.jsx";
+import MobileCameraPage from "./pages/Candidate/MobileCameraPage.jsx";
 import InterviewRoom from "./pages/Candidate/InterviewRoom.jsx";
+import MockInterview from "./pages/Candidate/MockInterview.jsx";
+import SkillGapAnalyzer from "./pages/Candidate/SkillGapAnalyzer.jsx";
+import CandidateAnalytics from "./pages/Candidate/CandidateAnalytics.jsx";
 import InterviewerDashboard from "./pages/Interviewer/Dashboard.jsx";
 import InterviewerJobs from "./pages/Interviewer/InterviewerJobs.jsx";
 import InterviewerAnalytics from "./pages/Interviewer/InterviewerAnalytics.jsx";
 import ReviewInterview from "./pages/Interviewer/ReviewInterview.jsx";
+import InterviewerQuestionBank from "./pages/Interviewer/InterviewerQuestionBank.jsx";
+import CandidateComparison from "./pages/Interviewer/CandidateComparison.jsx";
+import AIShortlist from "./pages/Interviewer/AIShortlist.jsx";
+import AvailabilityCalendar from "./pages/Interviewer/AvailabilityCalendar.jsx";
 import Settings from "./pages/Home/Settings.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
@@ -128,6 +137,42 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/candidate/preparation"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <CandidatePreparation />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/candidate/mock-interview"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <MockInterview />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/candidate/skill-gap"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <SkillGapAnalyzer />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/candidate/analytics"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <CandidateAnalytics />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/mobile-camera/:interviewId"
+                  element={<MobileCameraPage />}
+                />
+                <Route
                   path="/interview-room/:interviewId"
                   element={
                     <ProtectedRoute allowedRoles={['candidate']}>
@@ -138,7 +183,7 @@ const App = () => {
                 <Route
                   path="/interviewer/dashboard"
                   element={
-                    <ProtectedRoute allowedRoles={['interviewer']}>
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <InterviewerDashboard />
                     </ProtectedRoute>
                   }
@@ -146,7 +191,7 @@ const App = () => {
                 <Route
                   path="/interviewer/jobs"
                   element={
-                    <ProtectedRoute allowedRoles={['interviewer']}>
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <InterviewerJobs />
                     </ProtectedRoute>
                   }
@@ -154,7 +199,7 @@ const App = () => {
                 <Route
                   path="/interviewer/analytics"
                   element={
-                    <ProtectedRoute allowedRoles={['interviewer']}>
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <InterviewerAnalytics />
                     </ProtectedRoute>
                   }
@@ -162,15 +207,47 @@ const App = () => {
                 <Route
                   path="/interviewer/review/:interviewId"
                   element={
-                    <ProtectedRoute allowedRoles={['interviewer']}>
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <ReviewInterview />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/question-bank"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
+                      <InterviewerQuestionBank />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/comparison"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
+                      <CandidateComparison />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/shortlist/:jobId"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
+                      <AIShortlist />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/availability"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
+                      <AvailabilityCalendar />
                     </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/settings"
                   element={
-                    <ProtectedRoute allowedRoles={['candidate', 'interviewer']}>
+                    <ProtectedRoute allowedRoles={['candidate', 'interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <Settings />
                     </ProtectedRoute>
                   }

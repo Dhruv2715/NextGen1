@@ -1,0 +1,11 @@
+{
+  "interviewer_dashboard": {
+    "welcome": "Bienvenido de nuevo",
+    "overview": "Descripción general de su canal de contratación y listados activos.",
+    "new_job": "Crear Nuevo Trabajo",
+    "quick_stats": "Estadísticas Rápidas",
+    "active_jobs": "Trabajos Activos",
+    "total_applications": "Total de Solicitudes",
+    "interviews_completed": "Entrevistas Completadas"
+  }
+}

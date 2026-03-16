@@ -10,7 +10,11 @@ import {
     ArrowLeft,
     FileText,
     Search,
-    XCircle
+    XCircle,
+    DollarSign,
+    ThumbsUp,
+    ThumbsDown,
+    HandCoins
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
 
@@ -42,6 +46,16 @@ const CandidateApplications = () => {
             navigate(`/interview-room/${res.data.id}`);
         } catch (err) {
             alert(err.response?.data?.message || 'Failed to start interview.');
+        }
+    };
+
+    const handleOfferResponse = async (appId, decision) => {
+        try {
+            await axiosInstance.put(`/api/applications/${appId}/offer-response`, { decision });
+            alert(`You have successfully ${decision} the offer.`);
+            fetchApplications();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Failed to submit response.');
         }
     };
 
@@ -135,7 +149,50 @@ const CandidateApplications = () => {
                             </div>
 
                             <div className="mt-auto">
-                                {app.status === 'approved' ? (
+                                {app.stage === 'Offer' ? (
+                                    <div className="space-y-4">
+                                        <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-2xl border border-blue-100 dark:border-blue-500/20">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-blue-500">Compensation Package</span>
+                                                <HandCoins size={16} className="text-blue-500" />
+                                            </div>
+                                            <p className="text-xl font-black text-blue-700 dark:text-blue-300">
+                                                {app.offer_details?.compensation?.toLocaleString()} {app.offer_details?.currency}
+                                            </p>
+                                            {app.offer_details?.deadline && (
+                                                <p className="text-[10px] text-blue-500 mt-2 font-bold italic">
+                                                    Expires: {new Date(app.offer_details.deadline).toLocaleDateString()}
+                                                </p>
+                                            )}
+                                        </div>
+                                        
+                                        {app.offer_details?.candidate_decision === 'pending' ? (
+                                            <div className="flex gap-3">
+                                                <button
+                                                    onClick={() => handleOfferResponse(app.id, 'accepted')}
+                                                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all font-bold text-xs shadow-lg shadow-green-100 active:scale-95"
+                                                >
+                                                    <ThumbsUp size={14} /> Accept
+                                                </button>
+                                                <button
+                                                    onClick={() => handleOfferResponse(app.id, 'declined')}
+                                                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white text-red-600 border border-red-200 hover:bg-red-50 transition-all font-bold text-xs active:scale-95"
+                                                >
+                                                    <ThumbsDown size={14} /> Decline
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className={`w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-sm font-bold border ${
+                                                app.offer_details?.candidate_decision === 'accepted' 
+                                                ? 'bg-green-50 text-green-700 border-green-200' 
+                                                : 'bg-red-50 text-red-700 border-red-200'
+                                            }`}>
+                                                <CheckCircle size={18} />
+                                                Offer {app.offer_details?.candidate_decision.charAt(0).toUpperCase() + app.offer_details?.candidate_decision.slice(1)}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : app.status === 'approved' ? (
                                     <button
                                         onClick={() => handleResumeInterview(app.job_id)}
                                         className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all font-bold text-sm shadow-lg shadow-blue-100 active:scale-95"

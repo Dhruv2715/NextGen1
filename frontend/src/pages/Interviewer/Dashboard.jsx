@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import axiosInstance from '../../utils/axiosInstance';
 import { BeatLoader } from 'react-spinners';
 import {
@@ -13,6 +14,7 @@ import {
 import DashboardLayout from '../../components/DashboardLayout';
 
 const InterviewerDashboard = () => {
+  const { t, i18n } = useTranslation();
   const [jobsCount, setJobsCount] = useState({ total: 0, active: 0 });
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,24 +62,35 @@ const InterviewerDashboard = () => {
     <DashboardLayout>
       <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Interviewer Dashboard</h1>
-          <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium italic">Welcome back! Here's what's happening today.</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{t('interviewer_dashboard.welcome')}!</h1>
+          <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium italic">{t('interviewer_dashboard.overview')}</p>
         </div>
-        <Link
-          to="/interviewer/jobs"
-          className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 font-bold"
-        >
-          <Plus size={20} />
-          Post New Job
-        </Link>
+        <div className="flex gap-4">
+          <select 
+            className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 outline-none"
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+            value={i18n.language}
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+          <Link
+            to="/interviewer/jobs"
+            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95 font-bold"
+          >
+            <Plus size={20} />
+            {t('interviewer_dashboard.new_job')}
+          </Link>
+        </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         {[
           { label: 'Total Jobs', val: jobsCount.total, icon: <Briefcase className="text-blue-600 dark:text-blue-400" />, bg: 'bg-blue-50 dark:bg-blue-900/20' },
-          { label: 'Active Listings', val: jobsCount.active, icon: <CheckCircle className="text-green-600 dark:text-green-400" />, bg: 'bg-green-50 dark:bg-green-900/20' },
-          { label: 'Total Applications', val: interviews.length, icon: <Users className="text-purple-600 dark:text-purple-400" />, bg: 'bg-purple-50 dark:bg-purple-900/20' },
+          { label: t('interviewer_dashboard.active_jobs'), val: jobsCount.active, icon: <CheckCircle className="text-green-600 dark:text-green-400" />, bg: 'bg-green-50 dark:bg-green-900/20' },
+          { label: t('interviewer_dashboard.total_applications'), val: interviews.length, icon: <Users className="text-purple-600 dark:text-purple-400" />, bg: 'bg-purple-50 dark:bg-purple-900/20' },
         ].map((s, i) => (
           <div key={i} className="bg-white dark:bg-white/5 p-6 rounded-3xl border border-gray-100 dark:border-white/10 shadow-sm flex items-center gap-5 transition-colors">
             <div className={`p-4 rounded-2xl ${s.bg}`}>{s.icon}</div>

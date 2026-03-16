@@ -5,25 +5,23 @@ const questionAnswerPrompt = (
   numberOfQuestions
 ) => `
         You are an AI trained to generate technical interview questions and answers.
-    
+
         Task:
         - Role: ${role}
         - Candidate Experience: ${experience} years
         - Focus Topics: ${topicsToFocus}
         - Write ${numberOfQuestions} interview questions.
-        - For each question, generate a detailed but beginner-friendly answer.
-        - If the answer contains points or a list, start each point from a new line for clarity.
-        - If the answer needs a code example, add a small code block inside.
-        - Keep formatting very clean.
-        - Return a pure JSON array like:
+        - For each question, write a CONCISE answer (2-5 sentences max). Do NOT write long paragraphs.
+        - Do NOT include any code blocks, backticks, or markdown formatting inside the answers.
+        - Answers must be plain text only with no special characters or newlines embedded.
+        - Return a pure JSON array:
         [
             {
                 "question": "Question here?",
-                "answer": "Answer here."
-            },
-            ...
+                "answer": "Concise plain-text answer here."
+            }
         ]
-        Important: Do NOT add any extra text. Only return valid JSON.
+        Important: Return ONLY valid JSON. No extra text, no markdown, no code examples.
         `;
 
 const conceptExplainPrompt = (question) => `

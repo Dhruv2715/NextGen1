@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
     // Redirect to appropriate dashboard based on role
     if (user.role === 'candidate') {
       return <Navigate to="/candidate/dashboard" replace />;
-    } else if (user.role === 'interviewer') {
+    } else if (['interviewer', 'admin', 'hiring_manager', 'recruiter'].includes(user.role)) {
       return <Navigate to="/interviewer/dashboard" replace />;
     }
     return <Navigate to="/" replace />;

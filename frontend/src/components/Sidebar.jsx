@@ -12,8 +12,12 @@ import {
     Plus,
     Zap,
     HelpCircle,
-    ShieldCheck
+    ShieldCheck,
+    Book,
+    GitCompare,
+    CalendarDays
 } from 'lucide-react';
+
 
 const Sidebar = () => {
     const { user } = useContext(UserContext);
@@ -24,7 +28,10 @@ const Sidebar = () => {
     const interviewerLinks = [
         { title: 'Dashboard', path: '/interviewer/dashboard', icon: <LayoutDashboard size={18} /> },
         { title: 'My Jobs', path: '/interviewer/jobs', icon: <Briefcase size={18} /> },
-        { title: 'Analytics', path: '/interviewer/analytics', icon: <BarChart3 size={18} />, isNew: true },
+        { title: 'Question Bank', path: '/interviewer/question-bank', icon: <Book size={18} />, isNew: true },
+        { title: 'Comparison', path: '/interviewer/comparison', icon: <GitCompare size={18} />, isNew: true },
+        { title: 'Analytics', path: '/interviewer/analytics', icon: <BarChart3 size={18} /> },
+        { title: 'Availability', path: '/interviewer/availability', icon: <CalendarDays size={18} />, isNew: true },
         { title: 'Settings', path: '/settings', icon: <Settings size={18} /> },
     ];
 

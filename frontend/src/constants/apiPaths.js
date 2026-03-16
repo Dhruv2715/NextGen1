@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BASE_URL : "";
 
 export const API_PATHS = {
   AUTH: {
@@ -9,12 +9,14 @@ export const API_PATHS = {
     GOOGLE: "/api/auth/google",
   },
 
+  // Single merged AI block (was duplicated before, causing GENERATE_QUESTIONS to be overwritten)
   AI: {
-    GENERATE_QUESTIONS: "/api/ai/generate-questions", // Generate interview questions and answers using Gemini
-    GENERATE_EXPLANATION: "/api/ai/generate-explanation", // Generate concept explanation using Gemini
-    ANALYZE_TRANSCRIPT: "/api/ai/analyze-transcript", // Analyze and refine interview transcript using Gemini
-    CLEANUP_TRANSCRIPT: "/api/ai/cleanup-transcript", // Clean and improve transcript using Gemini
-    GENERATE_PDF_DATA: "/api/ai/generate-pdf-data", // Generate structured data for PDF report
+    GENERATE_QUESTIONS: "/api/ai/generate-questions",
+    GENERATE_QUESTION: "/api/ai/generate-question",
+    GENERATE_EXPLANATION: "/api/ai/generate-explanation",
+    ANALYZE_TRANSCRIPT: "/api/ai/analyze-transcript",
+    CLEANUP_TRANSCRIPT: "/api/ai/cleanup-transcript",
+    GENERATE_PDF_DATA: "/api/ai/generate-pdf-data",
   },
 
   SESSION: {
@@ -46,9 +48,5 @@ export const API_PATHS = {
     UPDATE: (id) => `/api/interviews/${id}`,
     SUBMIT: (id) => `/api/interviews/${id}/submit`,
     GET_TRANSCRIPTS: (id) => `/api/interviews/${id}/transcripts`,
-  },
-
-  AI: {
-    GENERATE_QUESTION: "/api/ai/generate-question",
   },
 };

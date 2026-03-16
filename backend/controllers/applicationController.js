@@ -1,6 +1,6 @@
 const Application = require("../models/Application");
 const Job = require("../models/Job");
-const sendEmail = require("../utils/emailService");
+const { sendEmail } = require("../utils/emailService");
 
 // @desc    Apply for a job
 // @route   POST /api/applications/apply
@@ -179,9 +179,114 @@ const getMyApplications = async (req, res) => {
     }
 };
 
+// @desc    Update application stage (Pipeline Kanban)
+// @route   PUT /api/applications/:id/stage
+// @access  Private (Interviewer/Recruiter)
+const updateApplicationStage = async (req, res) => {
+    try {
+        const { stage } = req.body;
+        const validStages = ['Applied', 'Screened', 'Technical', 'HR', 'Offer'];
+        if (!validStages.includes(stage)) {
+            return res.status(400).json({ message: "Invalid stage" });
+        }
+
+        const application = await Application.findById(req.params.id);
+
+        if (!application) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        // Verify interviewer owns the job
+        const job = await Job.findById(application.job_id);
+        if (job.interviewer_id.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized" });
+        }
+
+        application.stage = stage;
+        await application.save();
+
+        res.status(200).json({ message: `Application stage updated to ${stage}`, application });
+    } catch (error) {
+        console.error("Update stage error:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Respond to a job offer (Accept/Decline)
+// @route   PUT /api/applications/:id/offer-response
+// @access  Private (Candidate)
+const respondToOffer = async (req, res) => {
+    try {
+        const { decision } = req.body;
+        if (!['accepted', 'declined'].includes(decision)) {
+            return res.status(400).json({ message: "Invalid decision" });
+        }
+
+        const application = await Application.findById(req.params.id);
+        if (!application) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        if (application.candidate_id.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized" });
+        }
+
+        if (application.stage !== 'Offer') {
+            return res.status(400).json({ message: "No offer has been made for this application yet" });
+        }
+
+        application.offer_details.candidate_decision = decision;
+        await application.save();
+
+        res.status(200).json({ message: `Offer ${decision} successfully`, application });
+    } catch (error) {
+        console.error("Respond to offer error:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Update offer details (Salary, Deadline, etc.)
+// @route   PUT /api/applications/:id/offer-details
+// @access  Private (Interviewer)
+const updateOfferDetails = async (req, res) => {
+    try {
+        const { compensation, currency, deadline } = req.body;
+
+        const application = await Application.findById(req.params.id);
+        if (!application) {
+            return res.status(404).json({ message: "Application not found" });
+        }
+
+        const job = await Job.findById(application.job_id);
+        if (job.interviewer_id.toString() !== req.user.id) {
+            return res.status(403).json({ message: "Not authorized" });
+        }
+
+        application.offer_details = {
+            ...application.offer_details,
+            compensation: compensation || application.offer_details.compensation,
+            currency: currency || application.offer_details.currency,
+            deadline: deadline || application.offer_details.deadline
+        };
+        
+        // Automatically move to Offer stage if not already there
+        application.stage = 'Offer';
+        
+        await application.save();
+
+        res.status(200).json({ message: "Offer details updated", application });
+    } catch (error) {
+        console.error("Update offer details error:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 module.exports = {
     applyToJob,
     getInterviewerApplications,
     updateApplicationStatus,
-    getMyApplications
+    updateApplicationStage,
+    getMyApplications,
+    respondToOffer,
+    updateOfferDetails
 };

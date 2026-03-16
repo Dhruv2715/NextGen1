@@ -15,6 +15,7 @@ import {
     FileText
 } from 'lucide-react';
 import DashboardLayout from '../../components/DashboardLayout';
+import PipelineKanban from './PipelineKanban';
 
 const InterviewerJobs = () => {
     const [jobs, setJobs] = useState([]);
@@ -190,79 +191,13 @@ const InterviewerJobs = () => {
                                     <p className="text-gray-500 font-bold">No applications yet for this position.</p>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 gap-4">
-                                    {applicants.filter(a => (a.job_id?._id || a.job_id) === viewingApplicantsJob.id).map(app => (
-                                        <div key={app.id} className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6 group hover:border-blue-200 dark:hover:border-blue-500/50 transition-all">
-                                            <div className="flex gap-4 items-start flex-1">
-                                                <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400 font-black text-lg">
-                                                    {app.candidate?.name?.[0] || 'C'}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <div className="flex items-center gap-3 mb-1">
-                                                        <h4 className="font-bold text-gray-900 dark:text-white truncate">{app.candidate?.name}</h4>
-                                                        {app.is_screened && (
-                                                            <div className={`px-2 py-0.5 rounded-lg text-[10px] font-black flex items-center gap-1 shadow-sm ${app.ai_score >= 80 ? 'bg-green-500 text-white' :
-                                                                app.ai_score >= 50 ? 'bg-amber-500 text-white' : 'bg-red-500 text-white'
-                                                                }`}>
-                                                                <CheckCircle size={10} />
-                                                                {app.ai_score}% Match
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-xs text-gray-400 font-medium mb-2">{app.candidate?.email}</p>
-                                                    <div className="space-y-2">
-                                                        <div className="p-3 bg-gray-50 dark:bg-black/30 rounded-xl text-xs text-gray-600 dark:text-gray-400 border border-gray-100 dark:border-white/5 italic">
-                                                            "{app.bio || 'No bio provided.'}"
-                                                        </div>
-                                                        {app.is_screened && (
-                                                            <div className="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-xl text-[11px] text-blue-800 dark:text-blue-300 border border-blue-100/50 dark:border-blue-500/20 leading-relaxed relative group/ai">
-                                                                <div className="flex items-center gap-1.5 mb-1 font-black uppercase tracking-tighter text-[9px] text-blue-500 dark:text-blue-400">
-                                                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
-                                                                    Gemini Insight
-                                                                </div>
-                                                                {app.ai_analysis}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex flex-col items-end gap-3 w-full md:w-auto mt-2 md:mt-0">
-                                                <button
-                                                    onClick={() => setPreviewResumeUrl(app.resume_url)}
-                                                    className="flex items-center gap-2 text-xs font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg w-full justify-center"
-                                                >
-                                                    <FileText size={14} /> Preview Resume
-                                                </button>
-
-                                                {app.status === 'pending' ? (
-                                                    <div className="flex gap-2 w-full">
-                                                        <button
-                                                            disabled={updatingAppId === app.id}
-                                                            onClick={() => handleUpdateStatus(app.id, 'approved')}
-                                                            className="flex-1 py-2 px-4 bg-green-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-green-500/10 hover:bg-green-700 transition-all active:scale-95"
-                                                        >
-                                                            Approve
-                                                        </button>
-                                                        <button
-                                                            disabled={updatingAppId === app.id}
-                                                            onClick={() => handleUpdateStatus(app.id, 'rejected')}
-                                                            className="flex-1 py-2 px-4 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 rounded-xl text-xs font-bold border border-red-100 dark:border-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/20 transition-all active:scale-95"
-                                                        >
-                                                            Reject
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border ${app.status === 'approved'
-                                                        ? 'bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-500/20'
-                                                        : 'bg-red-50 dark:bg-red-900/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/20'
-                                                        }`}>
-                                                        {app.status}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
+                                <div className="mt-4">
+                                    <PipelineKanban 
+                                        applicants={applicants.filter(a => (a.job_id?._id || a.job_id) === viewingApplicantsJob.id)} 
+                                        jobId={viewingApplicantsJob.id}
+                                        onUpdateStatus={handleUpdateStatus}
+                                        setPreviewResumeUrl={setPreviewResumeUrl}
+                                    />
                                 </div>
                             )}
                         </div>

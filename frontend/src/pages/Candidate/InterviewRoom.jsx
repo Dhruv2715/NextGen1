@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import axiosInstance from '../../utils/axiosInstance';
 import { BeatLoader } from 'react-spinners';
-import { Mic, MicOff, Square, Play, Send, MessageSquare, AlertTriangle } from 'lucide-react';
+import { Mic, MicOff, Square, Play, Send, MessageSquare, AlertTriangle, QrCode, X, Smartphone, CheckCircle2 } from 'lucide-react';
 import io from 'socket.io-client';
+import useMobilePairing from '../../hooks/useMobilePairing';
+import { toast } from 'react-hot-toast';
 
 const InterviewRoom = () => {
   const { interviewId } = useParams();
@@ -12,6 +14,7 @@ const InterviewRoom = () => {
   const [interview, setInterview] = useState(null);
   const [question, setQuestion] = useState('');
   const [code, setCode] = useState('// Write your code here\n');
+  const [language, setLanguage] = useState('javascript');
   const [transcript, setTranscript] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -23,16 +26,46 @@ const InterviewRoom = () => {
   const [showChat, setShowChat] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [showQrModal, setShowQrModal] = useState(false);
+
+  // Proctoring State
+  const [proctoringLogs, setProctoringLogs] = useState([]);
+
+  const logProctoringEvent = (type) => {
+    const event = { event: type, timestamp: new Date() };
+    setProctoringLogs(prev => [...prev, event]);
+    // Also broadcast to interviewer in real-time
+    if (socket) {
+      socket.emit("proctoring_flag", {
+        room: interviewId,
+        type,
+        timestamp: new Date()
+      });
+    }
+  };
+
+  // Secondary Mobile Camera Hook
+  const { remoteStream: mobileStream, isMobileConnected } = useMobilePairing(interviewId, true);
+  const mobileVideoRef = useRef(null);
+
+  // Sync mobile stream to its video element
+  useEffect(() => {
+    if (mobileVideoRef.current && mobileStream) {
+      mobileVideoRef.current.srcObject = mobileStream;
+    }
+  }, [mobileStream]);
 
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const speechRecognitionRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const videoChunksRef = useRef([]);
 
   useEffect(() => {
     fetchInterview();
 
-    // Socket Setup
-    const socketUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    // Socket Setup - route through Vite proxy in development to fix mobile mixed-content limits
+    const socketUrl = import.meta.env.PROD ? (import.meta.env.VITE_API_URL || "https://api.myapp.com") : "/";
     const newSocket = io(socketUrl);
     setSocket(newSocket);
 
@@ -42,23 +75,40 @@ const InterviewRoom = () => {
       setChatHistory(prev => [...prev, data]);
     });
 
-    // Proctoring: Detect tab switches
+    // Proctoring: Detect tab switches, mouse leave, and copy/paste
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden' && status === 'in-progress') {
-        newSocket.emit("proctoring_flag", {
-          room: interviewId,
-          type: 'TAB_SWITCH',
-          timestamp: new Date()
-        });
+        logProctoringEvent('TAB_SWITCH');
+      }
+    };
+
+    const handleMouseLeave = (e) => {
+      if (status === 'in-progress' && e.clientY <= 0) {
+        logProctoringEvent('MOUSE_LEFT_WINDOW');
+      }
+    };
+
+    const handlePaste = (e) => {
+      if (status === 'in-progress') {
+        e.preventDefault();
+        logProctoringEvent('PASTE_ATTEMPT_BLOCKED');
+        alert('Pasting is disabled during the interview for proctoring purposes.');
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("paste", handlePaste);
 
     return () => {
       // Cleanup
       newSocket.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("paste", handlePaste);
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.stop();
+      }
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
@@ -138,6 +188,20 @@ const InterviewRoom = () => {
 
       // Start webcam
       await startWebcam();
+      
+      // Initialize MediaRecorder
+      if (streamRef.current) {
+        const recorder = new MediaRecorder(streamRef.current, { mimeType: 'video/webm' });
+        // Reset the array
+        videoChunksRef.current = [];
+        recorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            videoChunksRef.current.push(event.data);
+          }
+        };
+        recorder.start(1000); // collect 1s chunks
+        mediaRecorderRef.current = recorder;
+      }
 
       // Fetch question
       const jId = interview.job_id?._id || interview.job_id?.id || interview.job_id;
@@ -205,6 +269,32 @@ const InterviewRoom = () => {
 
     try {
       setIsSubmitting(true);
+      
+      let recordingUrl = '';
+      
+      // Stop MediaRecorder and wait a moment for the final chunks
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+        mediaRecorderRef.current.stop();
+        // Wait briefly for the last ondataavailable to fire
+        await new Promise(r => setTimeout(r, 500));
+      }
+
+      // Upload Video if we have chunks
+      if (videoChunksRef.current.length > 0) {
+        try {
+          const videoBlob = new Blob(videoChunksRef.current, { type: 'video/webm' });
+          const formData = new FormData();
+          formData.append('video', videoBlob, 'interview.webm');
+          
+          const uploadRes = await axiosInstance.post('/api/upload/video', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+          recordingUrl = uploadRes.data.url;
+        } catch (uploadErr) {
+          console.error('Failed to upload video:', uploadErr);
+          toast.error('Video upload failed, submitting without video.');
+        }
+      }
 
       // Prepare transcript data
       const transcriptData = transcript
@@ -218,7 +308,10 @@ const InterviewRoom = () => {
       // Submit interview
       await axiosInstance.post(`/api/interviews/${interviewId}/submit`, {
         code_submission: code,
+        language,
         transcripts: transcriptData,
+        proctoringLog: proctoringLogs,
+        recording_url: recordingUrl,
       });
 
       // Stop recording and webcam
@@ -273,10 +366,34 @@ const InterviewRoom = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4">
-        <h1 className="text-2xl font-bold">Technical Interview</h1>
-        {interview && (
-          <p className="text-gray-400 mt-1">Job: {interview.job_title}</p>
+      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold">Technical Interview</h1>
+          {interview && (
+            <p className="text-gray-400 mt-1">Job: {interview.job_title}</p>
+          )}
+        </div>
+        {status === 'in-progress' && (
+          <button
+            onClick={() => setShowQrModal(true)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border transition-all ${
+              isMobileConnected
+                ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                : 'bg-gray-700 hover:bg-gray-600 border-gray-600'
+            }`}
+          >
+            {isMobileConnected ? (
+             <>
+               <CheckCircle2 size={16} />
+               Mobile Cam Linked
+             </>
+            ) : (
+             <>
+               <QrCode size={16} />
+               Link Mobile Camera
+             </>
+            )}
+          </button>
         )}
       </div>
 
@@ -284,15 +401,35 @@ const InterviewRoom = () => {
       <div className="flex h-[calc(100vh-80px)]">
         {/* Left Side - Webcam */}
         <div className="w-1/2 bg-gray-800 border-r border-gray-700 flex flex-col">
-          <div className="flex-1 flex items-center justify-center p-4">
+          <div className="flex-1 flex items-center justify-center p-4 relative">
             {status === 'in-progress' ? (
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-full object-contain rounded-lg bg-black"
-              />
+              <>
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full h-full object-contain rounded-lg bg-black"
+                />
+                
+                {/* Secondary Mobile Camera Viewport (PIP) */}
+                {isMobileConnected && (
+                  <div className="absolute top-8 left-8 w-40 h-56 bg-black rounded-xl border-2 border-green-500/50 shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in duration-300">
+                    <div className="absolute top-0 inset-x-0 h-6 bg-gradient-to-b from-black/80 to-transparent z-10 flex items-center px-2">
+                       <span className="text-[9px] font-bold text-green-400 uppercase tracking-wider flex items-center gap-1">
+                         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Mobile View
+                       </span>
+                    </div>
+                    <video
+                      ref={mobileVideoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </>
             ) : status === 'completed' ? (
               <div className="text-center text-gray-400 p-8">
                 <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600">
@@ -357,20 +494,41 @@ const InterviewRoom = () => {
 
         {/* Right Side - Code Editor */}
         <div className="w-1/2 bg-gray-900 flex flex-col">
-          {/* Question Section */}
-          {status === 'in-progress' && question && (
-            <div className="border-b border-gray-700 p-4 bg-gray-800">
-              <h2 className="text-lg font-semibold mb-2">Interview Question</h2>
-              <p className="text-gray-300">{question}</p>
+          {/* Question & Language Controls Section */}
+          <div className="border-b border-gray-700 p-4 bg-gray-800 flex justify-between items-start gap-4">
+            <div className="flex-1">
+              {status === 'in-progress' && question ? (
+                <>
+                  <h2 className="text-lg font-semibold mb-2">Interview Question</h2>
+                  <p className="text-gray-300">{question}</p>
+                </>
+              ) : (
+                <p className="text-gray-500 italic">Awaiting question...</p>
+              )}
             </div>
-          )}
+            {status === 'in-progress' && (
+              <div className="w-48 flex-shrink-0">
+                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Language</label>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="w-full bg-gray-900 border border-gray-700 text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                >
+                  <option value="javascript">JavaScript</option>
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                  <option value="cpp">C++</option>
+                </select>
+              </div>
+            )}
+          </div>
 
           {/* Editor */}
           <div className="flex-1 relative flex overflow-hidden">
             <div className="flex-1">
               <Editor
                 height="100%"
-                defaultLanguage="javascript"
+                language={language}
                 value={code}
                 onChange={handleCodeChange}
                 theme="vs-dark"
@@ -460,6 +618,62 @@ const InterviewRoom = () => {
         <div className="fixed bottom-4 left-4 bg-gray-900/80 backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-400 pointer-events-none z-50">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           Proctoring Active: Tab switches are monitored
+        </div>
+      )}
+
+      {/* QR Code Modal for Mobile Pairing */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowQrModal(false)} />
+          <div className="relative bg-gray-900 rounded-2xl shadow-2xl border border-gray-700 max-w-sm w-full p-6 text-center animate-in zoom-in duration-200">
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-white rounded-lg transition-colors"
+            >
+              <X size={20} />
+            </button>
+            
+            <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Smartphone className="text-blue-400" size={24} />
+            </div>
+            
+            <h2 className="text-xl font-bold text-white mb-2">Connect Mobile Camera</h2>
+            
+            {isMobileConnected ? (
+              <div className="py-8">
+                <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                  <CheckCircle2 className="text-green-500" size={40} />
+                </div>
+                <h3 className="text-lg font-bold text-green-400">Successfully Linked</h3>
+                <p className="text-sm text-gray-400 mt-2">Your phone is now streaming the side-view.</p>
+                <button 
+                  onClick={() => setShowQrModal(false)}
+                  className="mt-6 bg-gray-800 hover:bg-gray-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all w-full"
+                >
+                  Close Window
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-gray-400 mb-6">
+                  Scan this QR code with your phone. Position your phone to your side to show your desk and hands to prevent cheating flags.
+                </p>
+                <div className="bg-white p-4 rounded-xl inline-block mx-auto mb-6">
+                  <img 
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+                      window.location.origin.replace('localhost', window.location.hostname === 'localhost' ? '192.168.1.2' : window.location.hostname) + '/mobile-camera/' + interviewId
+                    )}`} 
+                    alt="Scan to pair mobile camera"
+                    className="w-48 h-48"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 flex items-center justify-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  Waiting for connection...
+                </p>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -200,7 +200,7 @@ const updateInterview = async (req, res) => {
 // @access  Private (Candidate)
 const submitInterview = async (req, res) => {
   try {
-    const { code_submission, transcripts } = req.body;
+    const { code_submission, language, transcripts, proctoringLog } = req.body;
     const interview = await Interview.findById(req.params.id).populate('job_id');
 
     if (!interview) {
@@ -241,22 +241,28 @@ const submitInterview = async (req, res) => {
         fullTranscript
       );
     } catch (aiError) {
-      console.error("AI Evaluation failed:", aiError);
+      console.error("AI Evaluation failed (Likely Quota Limit):", aiError);
       feedbackJson = {
         score: 5,
         recommendation: "Manual Review Required",
-        feedback: "The AI evaluator encountered an error. Please review the performance manually.",
-        strengths: [],
-        improvements: []
+        feedback: "The AI evaluator encountered an error (Rate Limit). Please review the candidate performance manually.",
+        strengths: ["Review needed"],
+        improvements: ["Review needed"],
+        ai_summary: "AI quota exceeded. A summary could not be generated.",
+        ai_highlights: ["No highlights available due to Google API quota limits."]
       };
     }
 
-    // Update interview with code, status, and analysis
     const updatedInterview = await Interview.findByIdAndUpdate(req.params.id, {
       code_submission: code_submission || '',
+      language: language || 'javascript',
       status: 'completed',
       score: feedbackJson.score || 0,
       feedback_json: feedbackJson,
+      ai_summary: feedbackJson.ai_summary || "No summary available.",
+      ai_highlights: feedbackJson.ai_highlights || [],
+      proctoringLog: proctoringLog || [],
+      recording_url: req.body.recording_url || '',
       completed_at: new Date()
     }, { new: true });
 
