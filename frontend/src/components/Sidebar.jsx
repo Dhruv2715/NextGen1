@@ -13,6 +13,8 @@ import {
     Zap,
     HelpCircle,
     ShieldCheck,
+    PlayCircle,
+    TrendingUp,
     Book,
     GitCompare,
     CalendarDays
@@ -38,7 +40,10 @@ const Sidebar = () => {
     const candidateLinks = [
         { title: 'Find Jobs', path: '/candidate/dashboard', icon: <Briefcase size={18} /> },
         { title: 'Applications', path: '/candidate/applications', icon: <ClipboardList size={18} /> },
+        { title: 'Practice Mode', path: '/candidate/mock-interview', icon: <PlayCircle size={18} />, isNew: true },
         { title: 'Resume Builder', path: '/candidate/resume', icon: <FileText size={18} />, isNew: true },
+        { title: 'Skill Gap', path: '/candidate/skill-gap', icon: <TrendingUp size={18} />, isNew: true },
+        { title: 'Analytics', path: '/candidate/analytics', icon: <BarChart3 size={18} />, isNew: true },
         { title: 'Preparation', path: '/candidate/preparation', icon: <Zap size={18} /> },
         { title: 'Settings', path: '/settings', icon: <Settings size={18} /> },
     ];

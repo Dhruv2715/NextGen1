@@ -158,3 +158,11 @@ Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generative
     at async generateContent (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
     at async generateContentWithRetry (D:\NextGen1\backend\controllers\aiController.js:19:12)
     at async generateInterviewQuestion (D:\NextGen1\backend\controllers\aiController.js:589:20)
+[2026-03-16T15:56:04.804Z] API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+Stack: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at handleResponseNotOk (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:403:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async makeRequest (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:376:9)
+    at async generateContent (D:\NextGen1\backend\node_modules\@google\generative-ai\dist\index.js:819:22)
+    at async generateContentWithRetry (D:\NextGen1\backend\controllers\aiController.js:19:12)
+    at async generateInterviewQuestions (D:\NextGen1\backend\controllers\aiController.js:122:20)

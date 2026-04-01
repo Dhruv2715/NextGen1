@@ -191,14 +191,14 @@ const CandidateDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Feed: Find Jobs */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="relative group shadow-xl shadow-blue-500/5 rounded-2xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+          <div className="relative group shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] transition-all duration-300 rounded-2xl">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={20} />
             <input
               type="text"
               placeholder="Search by role, skill, or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-medium text-gray-700 dark:text-gray-200"
+              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-white/10 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-400 transition-all font-medium text-slate-700 dark:text-gray-200"
             />
           </div>
 
@@ -225,9 +225,9 @@ const CandidateDashboard = () => {
                 const status = job.application_status;
 
                 return (
-                  <div key={job.id} className="bg-white p-6 rounded-3xl border border-gray-100 dark:border-white/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
+                  <div key={job.id} className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:border-indigo-200 hover:shadow-[0_8px_30px_rgb(99,102,241,0.08)] hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full relative overflow-hidden">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white">
+                      <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-br group-hover:from-indigo-500 group-hover:to-cyan-400 group-hover:text-white group-hover:shadow-lg group-hover:shadow-indigo-200/50">
                         <Briefcase size={22} />
                       </div>
                       <div className="min-w-0">
@@ -263,7 +263,7 @@ const CandidateDashboard = () => {
                     {!status && (
                       <button
                         onClick={() => handleApplyClick(job)}
-                        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gray-900 text-white shadow-lg shadow-gray-200 transition-all font-bold text-sm active:scale-95"
+                        className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-slate-900 text-white shadow-md hover:shadow-lg hover:shadow-slate-300 transition-all font-bold text-sm active:scale-95 hover:scale-105"
                       >
                         <FileText size={18} />
                         Apply for Job
@@ -294,8 +294,8 @@ const CandidateDashboard = () => {
                       <button
                         onClick={() => isCompleted ? null : handleStartInterview(job.id)}
                         className={`w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl transition-all font-bold text-sm ${isCompleted
-                          ? 'bg-green-50 text-green-700 border-2 border-green-100'
-                          : 'bg-blue-600 text-white shadow-lg shadow-blue-200'
+                          ? 'bg-green-50 text-green-700 border border-green-200 hover:scale-105'
+                          : 'bg-gradient-to-r from-indigo-500 to-cyan-400 text-white shadow-lg shadow-indigo-200/50 hover:shadow-indigo-500/30 hover:scale-105'
                           } active:scale-95`}
                       >
                         <PlayCircle size={18} />
@@ -311,9 +311,9 @@ const CandidateDashboard = () => {
 
         {/* Sidebar Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 mb-8 flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" />
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-white/10 p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] transition-colors">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
               Quick Access
             </h3>
 
@@ -355,16 +355,20 @@ const CandidateDashboard = () => {
               </button>
             </div>
 
-            <div className="mt-10 p-6 bg-gradient-to-br from-gray-900 to-slate-800 rounded-3xl text-white shadow-xl">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-blue-400">Next Step</p>
-              <h4 className="text-lg font-bold mb-2">Practice Mode</h4>
-              <p className="text-xs text-gray-400 leading-relaxed mb-6">Brush up on your algorithms before the real assessment.</p>
-              <button 
-                onClick={() => navigate('/candidate/mock-interview')}
-                className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all border border-white/10"
-              >
-                Enter Arena
-              </button>
+            <div className="mt-10 p-8 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl text-white shadow-[0_8px_30px_rgb(99,102,241,0.15)] border border-indigo-500/20 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/20 blur-[50px] rounded-full" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/20 blur-[50px] rounded-full" />
+              <div className="relative z-10">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-cyan-400">Next Step</p>
+                <h4 className="text-xl font-bold mb-2 font-['Space_Grotesk'] tracking-tight">Practice Mode</h4>
+                <p className="text-xs text-indigo-100/80 leading-relaxed mb-6 font-medium">Brush up on your algorithms before the real assessment.</p>
+                <button 
+                  onClick={() => navigate('/candidate/mock-interview')}
+                  className="w-full py-3 bg-white text-slate-900 hover:scale-105 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-white/20"
+                >
+                  Enter Arena
+                </button>
+              </div>
             </div>
           </div>
         </div>

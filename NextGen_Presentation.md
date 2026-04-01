@@ -39,69 +39,54 @@
 
 ## Slide 3: Core Functionalities - Interviewer Portal
 
-### Job Management
-- ✅ Create and edit job listings
-- ✅ Real-time status control (Active/Inactive)
-- ✅ Track applicant counts per job
-- ✅ Search and filter applications
+### Job & Applicant Management
+- ✅ **Hiring Pipeline**: Multi-stage tracking from Application to Decision
+- ✅ **Applicant Review**: Deep-dive modals for Bio, Resume, and AI Scores
+- ✅ **Question Bank (NEW)**: Centralized repository for technical & behavioral questions
+- ✅ **Shortlist Logic**: Automated AI selection of top-performing candidates
 
-### Advanced Analytics
-- 📈 Hiring funnel visualization
-- 📊 Skills demand breakdown
-- 🎯 Candidate performance trends
-- 📉 Success rate analytics
-
-### Interview Management
-- 🎤 AI-generated interview questions
-- 📝 Real-time transcript analysis
-- 📄 Automated PDF report generation
-- 💬 Live chat and video integration
+### Collaborative & Technical Tools
+- 📊 **Candidate Comparison**: Side-by-side technical evaluation matrix
+- 📅 **Availability Calendar**: Integrated scheduling management for interviews
+- 🎭 **Live Interview Room**: WebRTC video, chat, and collaborative code editor
+- 📝 **Review Suite**: Post-interview analysis with AI-generated feedback
 
 ---
 
 ## Slide 4: Core Functionalities - Candidate Portal
 
-### Job Discovery
-- 🔍 Real-time job search with filters
-- 📋 Application status tracking
-- 🎯 Personalized job recommendations
+### Career Growth Tools
+- 🔍 **Real-time Marketplace**: Advanced job discovery with smart filters
+- 📄 **Resume Builder**: Professional CV creation with AI-powered optimization
+- 📈 **Skill Gap Analyzer**: Deep analysis of missing skills vs. target job requirements
+- 🎯 **Preparation Hub**: Curated library of technical and behavioral prep materials
 
-### Interview Experience
-- 🤖 AI-powered practice interviews
-- 📊 Performance metrics and scoring
-- 💡 Instant feedback and suggestions
-- 📈 Skill assessment reports
-
-### Profile Management
-- 📝 Resume builder and optimizer
-- 🏆 Skills showcase
-- 📊 Application history tracking
+### Assessment & Performance
+- 🤖 **Practice Mode**: AI-powered mock interview simulator with instant coaching
+- 📊 **Dynamic Dashboard**: Activity tracking, application status, and performance charts
+- 📷 **Dual-Camera Proctoring**: QR-based mobile pairing for secure assessment visibility
+- 🏆 **Personalized Analytics**: Visual progress tracking and skill-growth metrics
 
 ---
 
 ## Slide 5: Key Features & Differentiators
 
-### What Makes NextGen Unique?
+### The NextGen Advantage
 
-**🎨 Premium Design**
-- Glassmorphism aesthetic with vibrant gradients
-- Smooth micro-animations for enhanced UX
-- Fully responsive across all devices
+**🎨 Premium Visual System**
+- **Dark Charcoal Aesthetic**: Sleek #111111 design system for reduced eye strain
+- **Glassmorphism UI**: Modern, high-end transparent components and gradients
+- **Verified PRO Status**: Built-in user verification and tier-based leveling
 
-**🤖 AI Intelligence**
-- Dynamic question generation based on job requirements
-- Real-time transcript analysis and scoring
-- Automated performance insights
+**🤖 Extreme AI Intelligence**
+- **Smarter Proctored Sessions**: Live tab-switching and paste-protection alerts
+- **Automated Communication**: SMTP-powered job alerts and status update emails
+- **AI Performance Insights**: Detailed report generation (PDF) with behavioral scoring
 
-**⚡ Real-Time Capabilities**
-- Live video interviews with WebRTC
-- Instant chat messaging
-- Real-time status updates
-
-**📊 Comprehensive Analytics**
-- Detailed performance metrics
-- Visual hiring funnels
-- Data-driven decision making
+**⚡ Real-Time Infrastructure**
+- **Socket.io Sync**: Ultra-low latency collaborative coding and chat
+- **Global Settings Hub**: Comprehensive account and profile management
+- **Support Center**: Integrated help portal for immediate user assistance
 
 ---
 

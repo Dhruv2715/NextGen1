@@ -114,6 +114,28 @@ app.post("/api/ai/skill-gap", protect, extractSkillGap);
 const { initNotificationScheduler } = require("./utils/notificationScheduler");
 initNotificationScheduler();
 
+// Public stats endpoint for landing page (no auth required)
+app.get("/api/public/stats", async (req, res) => {
+  try {
+    const User = require("./models/User");
+    const Interview = require("./models/Interview");
+    const Job = require("./models/Job");
+    const Application = require("./models/Application");
+
+    const [users, interviews, jobs, applications] = await Promise.all([
+      User.countDocuments(),
+      Interview.countDocuments(),
+      Job.countDocuments(),
+      Application.countDocuments(),
+    ]);
+
+    res.json({ users, interviews, jobs, applications });
+  } catch (error) {
+    console.error("Public stats error:", error);
+    res.json({ users: 0, interviews: 0, jobs: 0, applications: 0 });
+  }
+});
+
 // Health check endpoint for debugging
 app.get("/health", (req, res) => {
   res.json({
