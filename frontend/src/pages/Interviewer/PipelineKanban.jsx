@@ -211,7 +211,7 @@ const PipelineKanban = ({ applicants, jobId, onUpdateStatus, setPreviewResumeUrl
             {/* Offer Details Modal */}
             {showOfferModal && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
-                    <div className="bg-white dark:bg-[#0a0a0a] rounded-3xl w-full max-w-md p-8 border dark:border-white/10 shadow-2xl">
+                    <div className="bg-white dark:bg-[#0a0a0a] rounded-3xl w-full max-w-md p-6 sm:p-8 border dark:border-white/10 shadow-2xl">
                         <h3 className="text-xl font-bold mb-6 dark:text-white">Offer Details for {selectedApp?.candidate?.name}</h3>
                         <form onSubmit={handleOfferDetailsSubmit} className="space-y-4">
                             <div>

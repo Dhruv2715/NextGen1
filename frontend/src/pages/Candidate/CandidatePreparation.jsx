@@ -261,19 +261,19 @@ const CandidatePreparation = () => {
                     <ArrowLeft size={16} /> Back to Dashboard
                 </button>
 
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
                             <Zap size={28} className="text-yellow-500" />
                             Interview Preparation
                         </h1>
-                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium text-sm">
+                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium text-xs sm:text-sm">
                             Practice smarter with AI-generated questions tailored to your target role.
                         </p>
                     </div>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl hover:bg-black dark:hover:bg-gray-100 transition-all shadow-md hover:shadow-lg active:scale-95 font-bold text-sm"
+                        className="w-full md:w-auto flex items-center justify-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-xl hover:bg-black dark:hover:bg-gray-100 transition-all shadow-md hover:shadow-lg active:scale-95 font-bold text-sm"
                     >
                         <Plus size={18} /> Create Custom Session
                     </button>
@@ -289,15 +289,15 @@ const CandidatePreparation = () => {
                 ].map((stat) => (
                     <div
                         key={stat.label}
-                        className="bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-5 flex items-center gap-4 hover:shadow-md transition-all"
+                        className="bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-4 sm:p-5 flex items-center gap-4 hover:shadow-md transition-all"
                     >
                         <div
-                            className={`w-12 h-12 rounded-xl flex items-center justify-center bg-${stat.color}-50 dark:bg-${stat.color}-900/20 text-${stat.color}-600 dark:text-${stat.color}-400`}
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center bg-${stat.color}-50 dark:bg-${stat.color}-900/20 text-${stat.color}-600 dark:text-${stat.color}-400 flex-shrink-0`}
                         >
                             <stat.icon size={22} />
                         </div>
                         <div>
-                            <div className="text-2xl font-extrabold text-gray-900 dark:text-white">{stat.value}</div>
+                            <div className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">{stat.value}</div>
                             <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{stat.label}</div>
                         </div>
                     </div>
@@ -315,13 +315,13 @@ const CandidatePreparation = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">One-click sessions for popular topics</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                     {QUICK_START_TOPICS.map((topic) => (
                         <button
                             key={topic.id}
                             onClick={() => handleQuickStart(topic)}
                             disabled={quickStartLoading !== null}
-                            className={`group relative bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-4 text-left hover:shadow-lg hover:border-gray-200 dark:hover:border-white/20 transition-all active:scale-95 disabled:opacity-50 overflow-hidden`}
+                            className={`group relative bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-3 sm:p-4 text-left hover:shadow-lg hover:border-gray-200 dark:hover:border-white/20 transition-all active:scale-95 disabled:opacity-50 overflow-hidden`}
                         >
                             {/* Gradient overlay on hover */}
                             <div
@@ -415,7 +415,7 @@ const CandidatePreparation = () => {
                         {filteredSessions.map((session) => (
                             <div
                                 key={session._id}
-                                className="bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:shadow-md hover:border-gray-200 dark:hover:border-white/20 transition-all group"
+                                className="bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:shadow-md hover:border-gray-200 dark:hover:border-white/20 transition-all group"
                             >
                                 <div className="flex items-start gap-4 flex-1 min-w-0">
                                     <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-extrabold text-sm flex-shrink-0">

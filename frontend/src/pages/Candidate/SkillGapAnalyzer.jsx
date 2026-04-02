@@ -42,7 +42,7 @@ const SkillGapAnalyzer = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-3xl p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="max-w-2xl">
              <h1 className="text-3xl font-black mb-3 flex items-center gap-3">
                 <Target className="text-blue-400" />
@@ -62,7 +62,7 @@ const SkillGapAnalyzer = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
            {/* Inputs Level */}
-           <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm flex flex-col">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                  <FileText className="text-blue-500" /> 1. Your Resume Context
               </h2>
@@ -75,7 +75,7 @@ const SkillGapAnalyzer = () => {
               />
            </div>
            
-           <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col">
+           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm flex flex-col">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                  <Briefcase className="text-indigo-500" /> 2. Target Job Description
               </h2>
@@ -112,10 +112,10 @@ const SkillGapAnalyzer = () => {
 
         {/* Results Level */}
         {results && (
-           <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl p-10 animate-in slide-in-from-bottom-8 mt-10">
+           <div className="bg-white rounded-3xl border border-gray-100 shadow-2xl p-6 sm:p-10 animate-in slide-in-from-bottom-8 mt-10">
               <div className="flex flex-col md:flex-row gap-10">
                  {/* Match Score */}
-                 <div className="md:w-1/3 flex flex-col items-center justify-center p-8 bg-gray-50 rounded-3xl border border-gray-100">
+                 <div className="md:w-1/3 flex flex-col items-center justify-center p-6 sm:p-8 bg-gray-50 rounded-3xl border border-gray-100">
                     <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">ATS Match Rate</p>
                     <div className="relative w-40 h-40 flex items-center justify-center">
                        <svg className="w-full h-full transform -rotate-90">

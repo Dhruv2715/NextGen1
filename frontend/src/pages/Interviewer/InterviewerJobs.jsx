@@ -171,7 +171,7 @@ const InterviewerJobs = () => {
             {viewingApplicantsJob && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
                     <div className="bg-white dark:bg-[#0a0a0a] rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col animate-in zoom-in duration-200 border dark:border-white/10">
-                        <div className="p-8 bg-gradient-to-r from-blue-900 to-indigo-950 text-white flex justify-between items-center">
+                        <div className="p-6 sm:p-8 bg-gradient-to-r from-blue-900 to-indigo-950 text-white flex justify-between items-center">
                             <div>
                                 <h2 className="text-2xl font-bold">Applicants: {viewingApplicantsJob.title}</h2>
                                 <p className="text-blue-300 text-sm mt-1 tracking-wide font-medium">Review and manage candidate assessments</p>
@@ -184,7 +184,7 @@ const InterviewerJobs = () => {
                             </button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-8 space-y-4 bg-gray-50/50 dark:bg-black/20">
+                        <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4 bg-gray-50/50 dark:bg-black/20">
                             {applicants.filter(a => (a.job_id?._id || a.job_id) === viewingApplicantsJob.id).length === 0 ? (
                                 <div className="py-20 text-center">
                                     <Users size={48} className="mx-auto text-gray-300 mb-4" />
@@ -291,7 +291,7 @@ const InterviewerJobs = () => {
             </div>
 
             {(showCreateForm || editingJob) && (
-                <div className="mb-10 bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 p-8 animate-in slide-in-from-top duration-300">
+                <div className="mb-10 bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 p-6 sm:p-8 animate-in slide-in-from-top duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                             {editingJob ? 'Update Job Posting' : 'Create New Job Posting'}
@@ -366,7 +366,7 @@ const InterviewerJobs = () => {
             )}
 
             {filteredJobs.length === 0 ? (
-                <div className="bg-white dark:bg-white/5 rounded-3xl border-2 border-dashed border-gray-200 dark:border-white/10 p-20 text-center">
+                <div className="bg-white dark:bg-white/5 rounded-3xl border-2 border-dashed border-gray-200 dark:border-white/10 p-10 sm:p-20 text-center">
                     <div className="bg-gray-50 dark:bg-white/5 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <Briefcase size={32} className="text-gray-300 dark:text-gray-600" />
                     </div>

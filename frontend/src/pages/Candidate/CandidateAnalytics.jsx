@@ -106,7 +106,7 @@ const CandidateAnalytics = () => {
 
                 {/* Key Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Latest Score</p>
                         <div className="flex items-end gap-3">
@@ -120,13 +120,13 @@ const CandidateAnalytics = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Total Applications</p>
                         <p className="text-5xl font-black text-green-600">{stats?.applications?.length || 0}</p>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
+                    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Interviews Completed</p>
                         <p className="text-5xl font-black text-purple-600">{stats?.scoresTrend?.length || 0}</p>
@@ -135,7 +135,7 @@ const CandidateAnalytics = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Trend Chart */}
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-8">
                         <div className="flex justify-between items-center mb-10">
                             <div>
                                 <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -189,7 +189,7 @@ const CandidateAnalytics = () => {
                     </div>
 
                     {/* Funnel View */}
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
+                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-8">
                         <div className="mb-10">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                 <Layers className="text-indigo-500" size={20} />
@@ -237,7 +237,7 @@ const CandidateAnalytics = () => {
 
                 {/* Performance History Table */}
                 <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                    <div className="p-8 border-b border-gray-50">
+                    <div className="p-6 sm:p-8 border-b border-gray-50">
                         <h3 className="text-lg font-bold text-gray-900">Detailed Interview History</h3>
                     </div>
                     <div className="overflow-x-auto">

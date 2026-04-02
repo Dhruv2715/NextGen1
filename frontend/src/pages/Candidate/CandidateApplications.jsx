@@ -103,7 +103,7 @@ const CandidateApplications = () => {
             </div>
 
             {filteredApplications.length === 0 ? (
-                <div className="bg-white rounded-3xl border-2 border-dashed border-gray-100 p-20 text-center">
+                <div className="bg-white rounded-3xl border-2 border-dashed border-gray-100 p-10 sm:p-20 text-center">
                     <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <ClipboardList size={32} className="text-gray-300" />
                     </div>
@@ -167,7 +167,7 @@ const CandidateApplications = () => {
                                         </div>
                                         
                                         {app.offer_details?.candidate_decision === 'pending' ? (
-                                            <div className="flex gap-3">
+                                            <div className="flex flex-col sm:flex-row gap-3">
                                                 <button
                                                     onClick={() => handleOfferResponse(app.id, 'accepted')}
                                                     className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all font-bold text-xs shadow-lg shadow-green-100 active:scale-95"

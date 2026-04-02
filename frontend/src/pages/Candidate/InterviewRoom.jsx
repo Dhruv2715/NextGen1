@@ -366,11 +366,11 @@ const InterviewRoom = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+      <div className="bg-gray-800 border-b border-gray-700 px-4 sm:px-6 py-4 flex flex-wrap justify-between items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Technical Interview</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Technical Interview</h1>
           {interview && (
-            <p className="text-gray-400 mt-1">Job: {interview.job_title}</p>
+            <p className="text-gray-400 text-xs sm:text-sm mt-1 truncate max-w-[200px] sm:max-w-none">Job: {interview.job_title}</p>
           )}
         </div>
         {status === 'in-progress' && (
@@ -398,9 +398,9 @@ const InterviewRoom = () => {
       </div>
 
       {/* Main Content - Split Screen */}
-      <div className="flex h-[calc(100vh-80px)]">
+      <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-80px)] overflow-y-auto lg:overflow-hidden">
         {/* Left Side - Webcam */}
-        <div className="w-1/2 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div className="w-full lg:w-1/2 bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-700 flex flex-col shrink-0">
           <div className="flex-1 flex items-center justify-center p-4 relative">
             {status === 'in-progress' ? (
               <>
@@ -409,14 +409,14 @@ const InterviewRoom = () => {
                   autoPlay
                   playsInline
                   muted
-                  className="w-full h-full object-contain rounded-lg bg-black"
+                  className="w-full h-full max-h-[300px] lg:max-h-none object-contain rounded-lg bg-black"
                 />
                 
                 {/* Secondary Mobile Camera Viewport (PIP) */}
                 {isMobileConnected && (
-                  <div className="absolute top-8 left-8 w-40 h-56 bg-black rounded-xl border-2 border-green-500/50 shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in duration-300">
+                  <div className="absolute top-4 left-4 sm:top-8 sm:left-8 w-32 sm:w-40 h-44 sm:h-56 bg-black rounded-xl border-2 border-green-500/50 shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in duration-300">
                     <div className="absolute top-0 inset-x-0 h-6 bg-gradient-to-b from-black/80 to-transparent z-10 flex items-center px-2">
-                       <span className="text-[9px] font-bold text-green-400 uppercase tracking-wider flex items-center gap-1">
+                       <span className="text-[8px] sm:text-[9px] font-bold text-green-400 uppercase tracking-wider flex items-center gap-1">
                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> Mobile View
                        </span>
                     </div>
@@ -493,26 +493,26 @@ const InterviewRoom = () => {
         </div>
 
         {/* Right Side - Code Editor */}
-        <div className="w-1/2 bg-gray-900 flex flex-col">
+        <div className="w-full lg:w-1/2 bg-gray-900 flex flex-col min-h-[500px] lg:min-h-0">
           {/* Question & Language Controls Section */}
-          <div className="border-b border-gray-700 p-4 bg-gray-800 flex justify-between items-start gap-4">
-            <div className="flex-1">
+          <div className="border-b border-gray-700 p-4 bg-gray-800 flex flex-col sm:flex-row justify-between items-start gap-4">
+            <div className="flex-1 w-full">
               {status === 'in-progress' && question ? (
                 <>
-                  <h2 className="text-lg font-semibold mb-2">Interview Question</h2>
-                  <p className="text-gray-300">{question}</p>
+                  <h2 className="text-base sm:text-lg font-semibold mb-2">Interview Question</h2>
+                  <p className="text-xs sm:text-sm text-gray-300">{question}</p>
                 </>
               ) : (
-                <p className="text-gray-500 italic">Awaiting question...</p>
+                <p className="text-gray-500 italic text-sm">Awaiting question...</p>
               )}
             </div>
             {status === 'in-progress' && (
-              <div className="w-48 flex-shrink-0">
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1.5">Language</label>
+              <div className="w-full sm:w-48 flex-shrink-0">
+                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Language</label>
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full bg-gray-900 border border-gray-700 text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  className="w-full bg-gray-900 border border-gray-700 text-white text-xs sm:text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 >
                   <option value="javascript">JavaScript</option>
                   <option value="python">Python</option>
@@ -545,7 +545,7 @@ const InterviewRoom = () => {
 
             {/* Chat Sidebar Overlay */}
             {showChat && (
-              <div className="absolute right-0 top-0 bottom-0 w-80 bg-gray-800 border-l border-gray-700 shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-200">
+              <div className="absolute right-0 top-0 bottom-0 w-full sm:w-80 bg-gray-800 border-l border-gray-700 shadow-2xl flex flex-col z-20 animate-in slide-in-from-right duration-200">
                 <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-gray-900/50">
                   <h3 className="font-bold flex items-center gap-2">
                     <MessageSquare size={16} className="text-blue-400" /> Live Chat

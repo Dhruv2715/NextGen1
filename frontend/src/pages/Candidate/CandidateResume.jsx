@@ -118,37 +118,38 @@ const CandidateResume = () => {
                     <ArrowLeft size={16} /> Back to Dashboard
                 </button>
 
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
+                <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+                    <div className="w-full xl:w-auto">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
                             <FileText size={28} className="text-blue-600" />
                             Resume Builder
                         </h1>
-                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium text-sm">
+                        <p className="mt-1 text-gray-500 dark:text-gray-400 font-medium text-xs sm:text-sm">
                             Craft a professional resume that stands out. Auto-saved as you type.
                         </p>
                     </div>
 
                     {/* ─── Action Buttons ────────────────────────────────── */}
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
                         {/* Load Sample */}
                         <button
                             onClick={handleLoadSample}
-                            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-sm font-bold rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg active:scale-95"
                         >
                             <BookOpen size={16} /> Load Sample
                         </button>
 
                         {/* Template Selector */}
-                        <div className="relative">
+                        <div className="relative flex-1 sm:flex-none">
                             <button
                                 onClick={() => { setShowTemplateMenu(!showTemplateMenu); setShowColorMenu(false); }}
-                                className="flex items-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 text-sm font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-white/15 transition-all"
+                                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-white/10 text-gray-700 dark:text-gray-300 text-xs sm:text-sm font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-white/15 transition-all"
                             >
                                 <LayoutTemplate size={16} />
-                                {currentTemplate.name}
+                                <span className="truncate max-w-[80px]">{currentTemplate.name}</span>
                                 <ChevronDown size={14} />
                             </button>
+                            {/* ... (Menu logic remains same) */}
                             {showTemplateMenu && (
                                 <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-white/10 shadow-xl z-50 overflow-hidden">
                                     {TEMPLATES.map((t) => (
@@ -223,10 +224,10 @@ const CandidateResume = () => {
                         <button
                             onClick={handleExportPDF}
                             disabled={isExporting}
-                            className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-bold rounded-xl hover:bg-black dark:hover:bg-gray-100 transition-all shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs sm:text-sm font-bold rounded-xl hover:bg-black dark:hover:bg-gray-100 transition-all shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50"
                         >
                             <Download size={16} />
-                            {isExporting ? 'Exporting…' : 'Download PDF'}
+                            <span className="whitespace-nowrap">{isExporting ? 'Exporting…' : 'Download PDF'}</span>
                         </button>
                     </div>
                 </div>

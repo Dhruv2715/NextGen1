@@ -123,11 +123,11 @@ const CandidateDashboard = () => {
       {applyingJob && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-in zoom-in duration-200">
-            <div className="p-8 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
-              <h2 className="text-2xl font-bold">Apply for {applyingJob.title}</h2>
-              <p className="text-blue-100 text-sm mt-1">Submit your details for interviewer review</p>
+            <div className="p-6 sm:p-8 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
+              <h2 className="text-xl sm:text-2xl font-bold">Apply for {applyingJob.title}</h2>
+              <p className="text-blue-100 text-xs sm:text-sm mt-1">Submit your details for interviewer review</p>
             </div>
-            <form onSubmit={submitApplication} className="p-8 space-y-6">
+            <form onSubmit={submitApplication} className="p-6 sm:p-8 space-y-6">
               <div className="space-y-2">
                 <label className="block text-sm font-bold text-gray-700">Self Introduction (Bio)</label>
                 <textarea
@@ -311,8 +311,8 @@ const CandidateDashboard = () => {
 
         {/* Sidebar Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-white/10 p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] transition-colors">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-white/10 p-5 sm:p-8 shadow-[0_4px_20px_rgb(0,0,0,0.03)] transition-colors">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
               Quick Access
             </h3>
@@ -355,7 +355,7 @@ const CandidateDashboard = () => {
               </button>
             </div>
 
-            <div className="mt-10 p-8 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl text-white shadow-[0_8px_30px_rgb(99,102,241,0.15)] border border-indigo-500/20 relative overflow-hidden">
+            <div className="mt-8 sm:mt-10 p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl text-white shadow-[0_8px_30px_rgb(99,102,241,0.15)] border border-indigo-500/20 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-400/20 blur-[50px] rounded-full" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/20 blur-[50px] rounded-full" />
               <div className="relative z-10">

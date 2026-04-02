@@ -144,7 +144,7 @@ const InterviewerAnalytics = () => {
 
     return (
         <DashboardLayout>
-            <div className="mb-8 flex justify-between items-end">
+            <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
                     <button
                         onClick={() => navigate('/interviewer/dashboard')}
@@ -158,7 +158,7 @@ const InterviewerAnalytics = () => {
                 </div>
                 <button 
                     onClick={handleExportCSV}
-                    className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all active:scale-95"
+                    className="w-full md:w-auto flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-blue-600 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all active:scale-95"
                 >
                     <Download size={16} /> Export CSV
                 </button>
@@ -171,7 +171,7 @@ const InterviewerAnalytics = () => {
                     { label: 'Offer Rate', val: `${stats.offerRate}%`, sub: 'Offers extended', icon: <TrendingUp size={20} />, color: 'bg-purple-600', text: 'text-purple-600' },
                     { label: 'Completed', val: stats.completedInterviews, sub: 'Assessments', icon: <CheckCircle size={20} />, color: 'bg-amber-600', text: 'text-amber-600' },
                 ].map((s, i) => (
-                    <div key={i} className="bg-white p-6 rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm relative overflow-hidden group">
+                    <div key={i} className="bg-white p-5 sm:p-6 rounded-3xl border border-gray-100 dark:border-white/5 shadow-sm relative overflow-hidden group">
                         <div className={`absolute top-0 right-0 w-24 h-24 ${s.color} opacity-[0.03] dark:opacity-[0.1] rounded-bl-full`} />
                         <div className="flex items-center gap-4 mb-4">
                             <div className={`p-2 rounded-xl bg-gray-50 dark:bg-white/5 ${s.text}`}>{s.icon}</div>
@@ -185,7 +185,7 @@ const InterviewerAnalytics = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Funnel Progress */}
-                <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
+                <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm">
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                             <BarChart3 className="text-blue-600" size={20} />
@@ -226,7 +226,7 @@ const InterviewerAnalytics = () => {
                 </div>
 
                 {/* Skill Demand */}
-                <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
+                <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm">
                     <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
                         <Award className="text-amber-500" size={20} />
                         Top Skills Required

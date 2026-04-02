@@ -176,8 +176,8 @@ const ReviewInterview = () => {
           Back to Dashboard
         </button>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 mb-8">
+          <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
             <div>
               <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">{interview?.job_title || 'Technical Assessment'}</p>
               <div className="flex items-center gap-3">
@@ -190,19 +190,19 @@ const ReviewInterview = () => {
               </div>
               <p className="text-gray-500 mt-1 font-medium italic">for {interview?.candidate_name || interview?.candidate_email || 'Candidate'}</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={() => setShowChat(!showChat)}
                 className={`p-3 rounded-xl border transition-all ${showChat ? 'bg-blue-600 text-white border-blue-600' : 'bg-white border-gray-200 text-gray-400 hover:text-blue-600'}`}
               >
                 <MessageSquare size={20} />
               </button>
-              <div className="h-10 w-px bg-gray-100 mx-2" />
-              <div className="text-right">
+              <div className="hidden sm:block h-10 w-px bg-gray-100 mx-2" />
+              <div className="text-left">
                 <p className="text-xs text-gray-500 uppercase font-black">Overall Score</p>
                 <p className="text-3xl font-black text-blue-600">{interview?.score || 'N/A'}<span className="text-sm text-gray-400">/10</span></p>
               </div>
-              <div className="h-10 w-px bg-gray-100 mx-2" />
+              <div className="hidden sm:block h-10 w-px bg-gray-100 mx-2" />
               <span className={`px-4 py-1.5 text-xs font-black uppercase rounded-xl ${interview?.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                 }`}>
                 {interview?.status || 'unknown'}
@@ -250,7 +250,7 @@ const ReviewInterview = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {/* Code Submission */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col min-h-[500px]">
-                    <div className="p-6 border-b border-gray-50 flex justify-between items-center">
+                    <div className="p-4 sm:p-6 border-b border-gray-50 flex justify-between items-center">
                       <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                         <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
                         {isLive ? 'Live Code Mirror' : 'Code Implementation'}
@@ -287,7 +287,7 @@ const ReviewInterview = () => {
 
                   {/* Transcript / Live Feedback placeholder */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
-                    <div className="p-6 border-b border-gray-50">
+                    <div className="p-4 sm:p-6 border-b border-gray-50">
                       <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                         <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
                         {isLive ? 'Live Audio Status' : 'Audio Transcript'}
@@ -360,7 +360,7 @@ const ReviewInterview = () => {
 
             {/* Feedback Section */}
             {interview?.feedback_json && (
-              <div className="bg-gray-900 rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden mt-8">
+              <div className="bg-gray-900 rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden mt-8">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 blur-[100px]" />
                 <div className="relative">
                   <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
@@ -435,7 +435,7 @@ const ReviewInterview = () => {
         )}
 
         {tab === 'recording' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="flex flex-col gap-4">
                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                  <Mic className="text-blue-500" /> Session Recording
@@ -475,7 +475,7 @@ const ReviewInterview = () => {
         )}
 
         {tab === 'proctoring' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
               <AlertTriangle className="text-amber-500" /> Proctoring Report
             </h2>

@@ -105,8 +105,7 @@ const InterviewerDashboard = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Main Content Area */}
         <div className="xl:col-span-2 space-y-8">
-          {/* Quick Actions / Getting Started */}
-          <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-[0_8px_30px_rgb(99,102,241,0.15)] border border-indigo-500/20">
+          <div className="bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-[0_8px_30px_rgb(99,102,241,0.15)] border border-indigo-500/20">
             <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-400/10 blur-[100px]" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 blur-[100px]" />
             <h2 className="text-2xl font-bold mb-4 font-['Space_Grotesk'] tracking-tight">Ready to find talent?</h2>
