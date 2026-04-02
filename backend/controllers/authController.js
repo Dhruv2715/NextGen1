@@ -345,6 +345,93 @@ const deleteMyAccount = async (req, res) => {
   }
 };
 
+// @desc    Update user location
+// @route   PUT /api/auth/location
+// @access  Private
+const updateLocation = async (req, res) => {
+  try {
+    const { address } = req.body;
+    if (!address) {
+      return res.status(400).json({ message: "Address is required" });
+    }
+
+    // Geocode the address using Nominatim (OpenStreetMap)
+    const encodedAddress = encodeURIComponent(address);
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+    
+    const response = await fetch(geocodeUrl, {
+      headers: {
+        'User-Agent': 'NextGenApp (contact@nextgen.local)' // Required by Nominatim policy
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ message: "Could not find coordinates for this address" });
+    }
+
+    const lat = parseFloat(data[0].lat);
+    const lng = parseFloat(data[0].lon);
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.location = { address, lat, lng };
+    await user.save();
+
+    res.json({
+      message: "Location updated successfully",
+      location: user.location
+    });
+  } catch (error) {
+    console.error("Update location error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// @desc    Get map locations of other users
+// @route   GET /api/auth/map-locations
+// @access  Private
+const getMapLocations = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Determine target role based on current user's role
+    // Candidates see interviewers, Interviewers see candidates
+    let targetRole;
+    if (user.role === 'candidate') {
+      targetRole = 'interviewer';
+    } else {
+      // If admin, recruiter, interviewer, or hiring_manager, let them see candidates
+      targetRole = 'candidate';
+    }
+
+    // Find all users with the target role who have a location set
+    const targets = await User.find(
+      { 
+        role: targetRole,
+        'location.lat': { $ne: null },
+        'location.lng': { $ne: null }
+      },
+      'name email profileImageUrl role location' // Only select necessary fields
+    );
+
+    res.json({
+      currentUserLocation: user.location,
+      markers: targets
+    });
+  } catch (error) {
+    console.error("Get map locations error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -355,4 +442,6 @@ module.exports = {
   googleAuthUser,
   updateUserProfile,
   deleteMyAccount,
+  updateLocation,
+  getMapLocations,
 };

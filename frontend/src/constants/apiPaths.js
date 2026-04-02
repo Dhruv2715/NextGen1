@@ -7,6 +7,8 @@ export const API_PATHS = {
     GET_PROFILE: "/api/auth/profile",
     UPDATE_RESUME_LINK: "/api/auth/resume-link",
     GOOGLE: "/api/auth/google",
+    UPDATE_LOCATION: "/api/auth/location",
+    GET_MAP_LOCATIONS: "/api/auth/map-locations",
   },
 
   // Single merged AI block (was duplicated before, causing GENERATE_QUESTIONS to be overwritten)

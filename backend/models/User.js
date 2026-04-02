@@ -10,6 +10,11 @@ const UserSchema = new mongoose.Schema(
     initials: { type: String },
     role: { type: String, enum: ['admin', 'hiring_manager', 'recruiter', 'interviewer', 'candidate'], default: 'candidate' },
     language: { type: String, enum: ['en', 'es', 'fr', 'de', 'hi'], default: 'en' },
+    location: {
+      address: { type: String, default: null },
+      lat: { type: Number, default: null },
+      lng: { type: Number, default: null }
+    },
     notificationPreferences: {
       emailReminders: { type: Boolean, default: true },
       jobAlerts: { type: Boolean, default: true }

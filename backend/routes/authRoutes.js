@@ -8,7 +8,9 @@ const {
     updateResumeLink,
     googleAuthUser,
     updateUserProfile,
-    deleteMyAccount
+    deleteMyAccount,
+    updateLocation,
+    getMapLocations
 } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -21,6 +23,8 @@ router.get("/profile", protect, getUserProfile);
 router.put("/profile", protect, updateUserProfile);
 router.delete("/profile", protect, deleteMyAccount);
 router.put("/resume-link", protect, updateResumeLink);
+router.put("/location", protect, updateLocation);
+router.get("/map-locations", protect, getMapLocations);
 router.get("/users", getAllUsers);
 router.delete("/users/:id", deleteUser);
 

@@ -17,7 +17,8 @@ import {
     TrendingUp,
     Book,
     GitCompare,
-    CalendarDays
+    CalendarDays,
+    MapPin
 } from 'lucide-react';
 
 
@@ -32,6 +33,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         { title: 'My Jobs', path: '/interviewer/jobs', icon: <Briefcase size={18} /> },
         { title: 'Question Bank', path: '/interviewer/question-bank', icon: <Book size={18} />, isNew: true },
         { title: 'Comparison', path: '/interviewer/comparison', icon: <GitCompare size={18} />, isNew: true },
+        { title: 'Locations Map', path: '/interviewer/map', icon: <MapPin size={18} />, isNew: true },
         { title: 'Analytics', path: '/interviewer/analytics', icon: <BarChart3 size={18} /> },
         { title: 'Availability', path: '/interviewer/availability', icon: <CalendarDays size={18} />, isNew: true },
         { title: 'Settings', path: '/settings', icon: <Settings size={18} /> },
@@ -43,6 +45,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         { title: 'Practice Mode', path: '/candidate/mock-interview', icon: <PlayCircle size={18} />, isNew: true },
         { title: 'Resume Builder', path: '/candidate/resume', icon: <FileText size={18} />, isNew: true },
         { title: 'Skill Gap', path: '/candidate/skill-gap', icon: <TrendingUp size={18} />, isNew: true },
+        { title: 'Locations Map', path: '/candidate/map', icon: <MapPin size={18} />, isNew: true },
         { title: 'Analytics', path: '/candidate/analytics', icon: <BarChart3 size={18} />, isNew: true },
         { title: 'Preparation', path: '/candidate/preparation', icon: <Zap size={18} /> },
         { title: 'Settings', path: '/settings', icon: <Settings size={18} /> },

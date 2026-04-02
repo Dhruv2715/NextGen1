@@ -86,6 +86,7 @@ import CandidateComparison from "./pages/Interviewer/CandidateComparison.jsx";
 import AIShortlist from "./pages/Interviewer/AIShortlist.jsx";
 import AvailabilityCalendar from "./pages/Interviewer/AvailabilityCalendar.jsx";
 import Settings from "./pages/Home/Settings.jsx";
+import LocationMap from "./pages/Home/LocationMap.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 import { ThemeProvider } from "./context/ThemeContext.jsx";
@@ -169,6 +170,14 @@ const App = () => {
                   }
                 />
                 <Route
+                  path="/candidate/map"
+                  element={
+                    <ProtectedRoute allowedRoles={['candidate']}>
+                      <LocationMap />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="/mobile-camera/:interviewId"
                   element={<MobileCameraPage />}
                 />
@@ -241,6 +250,14 @@ const App = () => {
                   element={
                     <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
                       <AvailabilityCalendar />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interviewer/map"
+                  element={
+                    <ProtectedRoute allowedRoles={['interviewer', 'admin', 'hiring_manager', 'recruiter']}>
+                      <LocationMap />
                     </ProtectedRoute>
                   }
                 />
