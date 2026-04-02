@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -51,16 +51,28 @@ const Sidebar = () => {
     const links = user.role === 'interviewer' ? interviewerLinks : candidateLinks;
 
     return (
-        <aside className="w-64 bg-white dark:bg-[#030303] border-r border-gray-200 dark:border-white/10 h-[calc(100vh-64px)] fixed left-0 top-16 hidden md:flex flex-col transition-colors z-40">
-            <div className="flex-1 py-6 px-4 overflow-y-auto custom-scrollbar">
+        <>
+            {/* Mobile Backdrop Overlay */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+                    onClick={onClose}
+                />
+            )}
 
-                {/* Quick Actions Section */}
-                <div className="mb-8">
-                    <p className="px-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-4">Quick Actions</p>
-                    <button
-                        onClick={() => navigate(user.role === 'interviewer' ? '/interviewer/jobs' : '/candidate/dashboard')}
-                        className="w-full flex items-center gap-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 group"
-                    >
+            <aside className={`w-64 bg-white dark:bg-[#030303] border-r border-gray-200 dark:border-white/10 h-[calc(100vh-64px)] fixed left-0 top-16 flex flex-col transition-transform duration-300 z-50 ${isOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'}`}>
+                <div className="flex-1 py-6 px-4 overflow-y-auto custom-scrollbar">
+
+                    {/* Quick Actions Section */}
+                    <div className="mb-8">
+                        <p className="px-4 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-4">Quick Actions</p>
+                        <button
+                            onClick={() => {
+                                navigate(user.role === 'interviewer' ? '/interviewer/jobs' : '/candidate/dashboard');
+                                onClose && onClose();
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all active:scale-95 group"
+                        >
                         <div className="bg-white/20 p-1 rounded-lg group-hover:rotate-90 transition-transform duration-300">
                             <Plus size={16} strokeWidth={3} />
                         </div>
@@ -77,6 +89,7 @@ const Sidebar = () => {
                         <NavLink
                             key={link.path}
                             to={link.path}
+                            onClick={() => onClose && onClose()}
                             className={({ isActive }) =>
                                 `flex items-center justify-between px-4 py-3 text-sm font-bold rounded-xl transition-all group ${isActive
                                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
@@ -143,6 +156,7 @@ const Sidebar = () => {
                 </div>
             </div>
         </aside>
+        </>
     );
 };
 

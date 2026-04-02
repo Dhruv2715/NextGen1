@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
-import { Home, LogOut } from 'lucide-react';
+import { Home, LogOut, Menu } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
-const Navbar = ({ onProfileClick }) => {
+const Navbar = ({ onProfileClick, onToggleSidebar }) => {
   const { user, clearUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -19,12 +19,19 @@ const Navbar = ({ onProfileClick }) => {
     <nav className="bg-white dark:bg-[#030303] border-b border-gray-200 dark:border-white/10 text-gray-900 dark:text-gray-100 shadow-sm fixed top-0 w-full z-50 h-16 transition-colors">
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
+            <button 
+                onClick={onToggleSidebar}
+                className="md:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300 transition-colors"
+                aria-label="Toggle Sidebar"
+            >
+                <Menu size={24} />
+            </button>
             <Link to={user.role === 'interviewer' ? '/interviewer/dashboard' : '/candidate/dashboard'} className="flex items-center gap-2 group">
               <div className="bg-blue-600 p-1.5 rounded-lg text-white group-hover:bg-blue-700 transition-colors">
                 <Home size={20} />
               </div>
-              <span className="font-bold text-xl tracking-tight">NextGen</span>
+              <span className="font-bold text-xl tracking-tight hidden sm:block">NextGen</span>
             </Link>
           </div>
 
@@ -59,7 +66,7 @@ const Navbar = ({ onProfileClick }) => {
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 active:scale-95"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 active:scale-95"
             >
               <LogOut size={18} />
               <span className="hidden sm:inline">Logout</span>
