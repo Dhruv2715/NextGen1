@@ -146,15 +146,15 @@ const MockInterview = () => {
 
         {/* Setup Screen */}
         {sessionState === 'setup' && (
-           <div className="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm">
+           <div className="bg-white rounded-2xl p-6 sm:p-10 text-center border border-gray-100 shadow-sm">
               <BrainCircuit size={64} className="text-indigo-400 mx-auto mb-6" />
-              <h2 className="text-2xl font-black text-gray-900 mb-8">Choose your Mock Interview Mode</h2>
-              <div className="flex justify-center gap-4 mb-10">
+              <h2 className="text-xl sm:text-2xl font-black text-gray-900 mb-8">Choose your Mock Interview Mode</h2>
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10">
                  {['HR', 'Technical', 'Case Study', 'Behavioral'].map(m => (
                     <button 
                        key={m}
                        onClick={() => setMode(m)}
-                       className={`px-6 py-4 rounded-2xl border-2 font-bold transition-all ${mode === m ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-lg shadow-blue-500/20 scale-105' : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'}`}
+                       className={`px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl border-2 font-bold transition-all text-sm sm:text-base flex-1 sm:flex-none min-w-[45%] sm:min-w-0 ${mode === m ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-lg shadow-blue-500/20 scale-105' : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'}`}
                     >
                        {m}
                     </button>
@@ -162,7 +162,7 @@ const MockInterview = () => {
               </div>
               <button 
                  onClick={handleStartSession}
-                 className="px-10 py-4 bg-gray-900 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl"
+                 className="w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-4 bg-gray-900 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-black transition-all shadow-xl text-sm sm:text-base"
               >
                  Start Practice Session
               </button>
